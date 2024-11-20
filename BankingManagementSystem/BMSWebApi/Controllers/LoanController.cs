@@ -132,14 +132,17 @@ namespace BMSWebApi.Controllers
                 _context.Loans.Add(loan);
                 await _context.SaveChangesAsync();
 
-                await _context.Database.ExecuteSqlInterpolatedAsync(
-                $"EXEC LoanAmountSent @LoanId = {loanDTO.LoanId}, @CustomerId = {loanDTO.CustomerId}, @LoanAmount = {loanDTO.LoanAmount}, @Result = {resultParam} OUTPUT");
-
-                string resultMessage = resultParam.Value.ToString();
-
-                if (resultMessage != "Loan amount sent successfully!")
+                if (loan.Status == "Waiting for approval")
                 {
-                    return BadRequest(new { Message = resultMessage });
+                    await _context.Database.ExecuteSqlInterpolatedAsync(
+                    $"EXEC LoanAmountSent @LoanId = {loanDTO.LoanId}, @CustomerId = {loanDTO.CustomerId}, @LoanAmount = {loanDTO.LoanAmount}, @Result = {resultParam} OUTPUT");
+
+                    string resultMessage = resultParam.Value.ToString();
+
+                    if (resultMessage != "Loan amount sent successfully!")
+                    {
+                        return BadRequest(new { Message = resultMessage });
+                    }
                 }
 
                 _logger.LogInformation($"Created the loan of {loan.LoanId}");
