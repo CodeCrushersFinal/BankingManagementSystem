@@ -34,6 +34,37 @@ namespace BMSWebApi.Controllers
             return await _context.Transactions.ToListAsync();
         }
 
+        [HttpGet]
+        [Route("GetAccountTransactions")]
+        public IActionResult GetAccountTransactions(int accountId)
+        {
+            using (var db = new BMSDbContext())
+            {
+                // Fetch transaction details (Sender's perspective)
+                var transactions = from t in db.Transactions
+                                   where t.AccountId == accountId
+                                   select new
+                                   {
+                                       TransactionId = t.TransactionId,
+                                       Amount = t.Amount,
+                                       TransactionType = t.TransactionType,
+                                       TransactionDate = t.TransactionDate,
+                                   };
+
+                // Fetch receiver details for these transactions
+                var receiverDetails = from r in db.Receivers
+                                      join t in db.Transactions on r.TransactionId equals t.TransactionId
+                                      where r.AccountId == accountId
+                                      select new
+                                      {
+                                          ReceiverAccountId = r.AccountId,
+                                          ReceiverTransactionId = r.TransactionId,
+                                          ReceivedAmount = t.Amount
+                                      };
+
+                return Ok(new { Transactions = transactions.ToList(), Receivers = receiverDetails.ToList() });
+            }
+        }
 
         /// <summary>
         /// This action will get the transaction by id
