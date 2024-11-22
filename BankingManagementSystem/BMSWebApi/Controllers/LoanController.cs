@@ -119,31 +119,10 @@ namespace BMSWebApi.Controllers
             loan.Status = loanDTO.Status;
             loan.ApplicationDate = loanDTO.ApplicationDate;
 
-            var resultParam = new SqlParameter
-            {
-                ParameterName = "@Result",
-                SqlDbType = SqlDbType.VarChar,
-                Direction = ParameterDirection.Output,
-                Size = 500
-            };
-
             try
             {
                 _context.Loans.Add(loan);
                 await _context.SaveChangesAsync();
-
-                if (loan.Status == "Waiting for approval")
-                {
-                    await _context.Database.ExecuteSqlInterpolatedAsync(
-                    $"EXEC LoanAmountSent @LoanId = {loanDTO.LoanId}, @CustomerId = {loanDTO.CustomerId}, @LoanAmount = {loanDTO.LoanAmount}, @Result = {resultParam} OUTPUT");
-
-                    string resultMessage = resultParam.Value.ToString();
-
-                    if (resultMessage != "Loan amount sent successfully!")
-                    {
-                        return BadRequest(new { Message = resultMessage });
-                    }
-                }
 
                 _logger.LogInformation($"Created the loan of {loan.LoanId}");
             }
@@ -165,6 +144,136 @@ namespace BMSWebApi.Controllers
             }
 
             return CreatedAtAction("GetLoanById", new { id = loan.LoanId }, loan);
+        }
+
+        [HttpGet("Pending")]
+        public async Task<ActionResult<IEnumerable<Loan>>> GetPendingLoans()
+        {
+            var pendingLoans = await _context.Loans
+                .Where(loan => loan.Status == "Waiting for approval") // Only include pending loans
+                .ToListAsync();
+
+            if (!pendingLoans.Any())
+            {
+                return Ok(new { Message = "No pending loans found.", Loans = new List<Loan>() });
+            }
+
+            return Ok(pendingLoans);
+        }
+
+        [HttpPut("Approve/{id}")]
+        public async Task<IActionResult> ApproveLoan(int id)
+        {
+            var loan = await _context.Loans.FindAsync(id);
+
+            if (loan == null)
+            {
+                return NotFound(new { Message = "Loan not found." });
+            }
+
+            if (loan.Status == "Approved")
+            {
+                return BadRequest(new { Message = "Loan is already approved." });
+            }
+
+            loan.Status = "Approved";
+
+            var resultParam = new SqlParameter
+            {
+                ParameterName = "@Result",
+                SqlDbType = SqlDbType.VarChar,
+                Direction = ParameterDirection.Output,
+                Size = 500
+            };
+
+            try
+            {
+                // Update the loan status to "Approved"
+                _context.Entry(loan).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                // Call the LoanAmountSent stored procedure
+                await _context.Database.ExecuteSqlInterpolatedAsync(
+                    $"EXEC LoanAmountSent @LoanId = {loan.LoanId}, @CustomerId = {loan.CustomerId}, @LoanAmount = {loan.LoanAmount}, @Result = {resultParam} OUTPUT");
+
+                // Check the result message from the stored procedure
+                string resultMessage = resultParam.Value.ToString();
+                if (resultMessage != "Loan amount sent successfully!")
+                {
+                    return BadRequest(new { Message = resultMessage });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error approving loan {id}: {ex.Message}");
+                return StatusCode(500, new { Message = "An error occurred while approving the loan.", Details = ex.Message });
+            }
+
+            return NoContent();
+        }
+
+
+        [HttpGet("Approved")]
+        public async Task<ActionResult<IEnumerable<Loan>>> GetApprovedLoans()
+        {
+            var approvedLoans = await _context.Loans
+                .Where(loan => loan.Status == "LoanAmountSent")
+                .ToListAsync();
+
+            if (!approvedLoans.Any())
+            {
+                return NotFound(new { Message = "No approved loans found." });
+            }
+
+            return Ok(approvedLoans);
+        }
+
+        // PUT: api/Loans/Reject/5
+        [HttpPut("Reject/{id}")]
+        public async Task<IActionResult> RejectLoan(int id)
+        {
+            var loan = await _context.Loans.FindAsync(id);
+
+            if (loan == null)
+            {
+                return NotFound(new { Message = "Loan not found." });
+            }
+
+            if (loan.Status == "Rejected")
+            {
+                return BadRequest(new { Message = "Loan is already rejected." });
+            }
+
+            loan.Status = "Rejected";
+
+            try
+            {
+                _context.Entry(loan).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "An error occurred while rejecting the loan.", Details = ex.Message });
+            }
+
+            return NoContent();
+        }
+
+        // GET: api/Loans/Rejected
+        [HttpGet("Rejected")]
+        public async Task<ActionResult<IEnumerable<Loan>>> GetRejectedLoans()
+        {
+            var rejectedLoans = await _context.Loans
+                .Where(loan => loan.Status == "Rejected")
+                .ToListAsync();
+
+            // If no rejected loans are found, return a message with empty list
+            if (!rejectedLoans.Any())
+            {
+                return Ok(new { Message = "No loans rejected", Loans = new List<Loan>() });
+            }
+
+            return Ok(rejectedLoans); // Return the list of rejected loans
         }
 
         /// <summary>

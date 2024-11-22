@@ -1,0 +1,369 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Banking Options</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            /* background-color: #bdbde8; */
+            background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
+            margin: 0;
+            /*padding-top: 60px;*/ /* To avoid content being hidden under the navbar */
+        }
+
+        .bank-name {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size: 50px;
+            text-align: center;
+            margin-top: 20px; /* Adjust the margin as needed */
+        }
+
+        .tagline {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size: 30px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* General Navigation Bar Styles */
+        /*        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #192677;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }*/
+
+        /*.nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+            .nav-links li {
+                display: inline;
+            }
+
+            .nav-links a {
+                color: white;
+                text-decoration: none;
+                font-size: 1rem;
+                transition: color 0.3s, background-color 0.3s;
+                padding: 0.5rem 1rem;
+                border-radius: 5px;
+            }*/
+
+        /* Hover Effect */
+        /*.nav-links a:hover {
+                    color: #ddd;
+                }*/
+
+        /* Active Link Styling */
+        /*                .nav-links a.active {
+                    background-color: #333;
+                    color: #fff;
+                    font-weight: bold;
+                }*/
+
+        .content-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1500px;
+            height: auto;
+            margin: 5px;
+            padding: 20px;
+            border-radius: 0px;
+            /* border: solid 1px;*/
+        }
+
+        .text-container {
+            flex: 1;
+        }
+
+            .text-container h2,
+            .text-container h3,
+            .text-container p {
+                margin: 0 0 20px;
+            }
+
+        .image-container {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+            .image-container img {
+                max-width: 100%;
+                height: 500px;
+                border-radius: 0px;
+            }
+
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #2b4d75;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.7rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+            button:hover {
+                background-color: #0c1c35;
+            }
+
+
+
+        /* customer options */
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px; /* Space between cards */
+            padding: 20px;
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px 30px; /* Space between the cards */
+            padding: 20px;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.8); /* Clear background effect */
+            border-radius: 10px;
+            overflow: hidden;
+            width: 350px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            }
+
+        .card-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-content {
+            padding: 15px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        p {
+            font-size: 14px;
+            color: #666;
+        }
+
+
+
+        .content-container1 {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1500px;
+            height: auto;
+            margin: 5px;
+            padding: 70px;
+            border-radius: 0px;
+        }
+
+        .text-container1 {
+            flex: 1;
+        }
+
+            .text-container1 h2,
+            .text-container1 h3,
+            .text-container1 p {
+                margin: 0 0 20px;
+            }
+
+        .image-container1 {
+            flex: 1;
+            display: flex;
+            /* justify-content: flex-end;*/
+        }
+
+
+            .image-container1 img {
+                max-width: 100%;
+                height: 350px;
+                border-radius: 0px;
+            }
+
+        /* contact form */
+        .contactform {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <h1 class="bank-name">Vivid Bank</h1>
+    <h2 class="tagline"> Clear , Colourful and dependable </h2>
+
+
+
+
+
+    <div class="content-container">
+        <div class="text-container">
+            <h2 style="font-size: 29px; margin-top: 180px;margin-left: 40px;font-family: Garamond, serif;">Banking Made Simple, Secure, and Personalized.</h2>
+
+        </div>
+        <div class="image-container">
+            <img src="https://freepngimg.com/save/165654-banking-pic-digital-png-image-high-quality/888x448">
+        </div>
+    </div>
+
+
+    <!--customer options-->
+    <h3 style="font-size: 30px;margin-left: 100px;">Customer Banking Options</h3>
+    <div class="card-container">
+        <div class="cards-container">
+            <div class="card" onclick="window.location.href='@Url.Action("TransferMoney", "Customer")'">
+
+                <div class="card-image" style="background-image: url('https://static.vecteezy.com/system/resources/thumbnails/027/742/677/small/internet-banking-technology-concept-vector.jpg');"></div>
+                <div class="card-content">
+                    <h2>Transfer Money</h2>
+                    <p>Send money to another account securely and easily.</p>
+                </div>
+            </div>
+            <div class="card" onclick="window.location.href='@Url.Action("CreateAccount","Customer")'">
+                <div class="card-image" style="background-image: url('https://thumbs.dreamstime.com/b/digital-background-banking-online-vector-concept-digital-background-banking-online-vector-concept-eps-119477548.jpg');"></div>
+                <div class="card-content">
+                    <h2>Create an Account</h2>
+                    <p>Open a new savings or checking account with us.</p>
+                </div>
+            </div>
+            <div class="card" onclick="window.location.href='@Url.Action("ApplyLoan","Customer")'">
+                <div class="card-image" style="background-image: url('https://www.bruningbank.com/sites/default/files/styles/front_page/public/2024-10/banking.jpeg?itok=jotKVvlO');"></div>
+                <div class="card-content">
+                    <h2>Apply for Loan</h2>
+                    <p>Get financial support for your needs with our loan services.</p>
+                </div>
+            </div>
+
+            <div class="card" onclick="window.location.href='@Url.Action("CheckBalance","Customer")'">
+                <div class="card-image" style="background-image: url('https://media.istockphoto.com/id/1389355907/vector/online-banking-login-protection-the-concept-of-a-smart-wallet-with-an-application-for.jpg?s=612x612&w=0&k=20&c=1dpaw7sEyi1E_RYabb-iOMwb8SB7W3n3U6xa20LLAsE=');"></div>
+                <div class="card-content">
+                    <h2>Check Bank Balance</h2>
+                    <p>View your current bank balance anytime.</p>
+                </div>
+            </div>
+            <div class="card" onclick="window.location.href='@Url.Action("TransactionHistory","Customer")'">
+                <div class="card-image" style="background-image: url('https://static.vecteezy.com/system/resources/thumbnails/048/879/372/small/fintech-financial-technology-online-banking-and-crowdfunding-business-investment-banking-payment-technology-concept-closeup-finger-about-to-press-a-button-with-fintech-icon-illustration-vector.jpg');"></div>
+                <div class="card-content">
+                    <h2>Trasaction History</h2>
+                    <p>Check your trasaction history effortlessly</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container1">
+        <div class="image-container1">
+            <img src="https://cdni.iconscout.com/illustration/premium/thumb/bank-website-under-maintenance-illustration-download-in-svg-png-gif-file-formats--logo-server-down-people-illustrations-4341090.png">
+        </div>
+        <div class="text-container1">
+
+            <h2 style="font-size: 29px;margin-top: 130px;font-family: Garamond, serif;">
+                &nbsp;&nbsp;
+                Enjoy 24/7 access to your accounts, secure and seamless transactions, and tailored financial solutions.
+            </h2>
+        </div>
+    </div>
+
+    <script>
+    document.querySelector(".nav-link-customer").addEventListener("click", function (e) {
+    e.preventDefault();
+
+            fetch("/Customer/IndexPage")
+        .then(response => response.text())
+        .then(htmlContent => {
+            document.getElementById("main-content").innerHTML = htmlContent;
+        })
+        .catch(error => console.error("Error loading customer page:", error));
+});
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const cards = document.querySelectorAll(".card");
+
+            cards.forEach(card => {
+                card.addEventListener("click", function () {
+                    const pageUrl = this.getAttribute("data-url"); // Get the URL from the card's data attribute
+
+                    fetch(pageUrl)
+                        .then(response => {
+                            if (response.ok) {
+                                return response.text(); // Return the HTML content
+                            } else {
+                                throw new Error(`Error loading page: ${response.statusText}`);
+                            }
+                        })
+                        .then(htmlContent => {
+                            document.getElementById("main-content").innerHTML = htmlContent; // Load content into the main area
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            alert("Failed to load the page. Please try again.");
+                        });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

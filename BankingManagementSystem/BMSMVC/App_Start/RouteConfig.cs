@@ -16,7 +16,7 @@ namespace BMSMVC
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Admin", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Admin", action = "MainBody", id = UrlParameter.Optional }
             );
         }
     }

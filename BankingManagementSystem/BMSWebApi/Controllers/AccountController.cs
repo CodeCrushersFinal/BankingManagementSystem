@@ -145,6 +145,21 @@ namespace BMSWebApi.Controllers
             return CreatedAtAction("GetAccountById", new { id = account.AccountId }, account );
         }
 
+        [HttpGet("{accountId}/Transactions")]
+        public IActionResult GetTransactionsByAccountId(int accountId)
+        {
+            var transactions = _context.Transactions
+                .Where(t => t.AccountId == accountId)
+                .ToList();
+
+            if (transactions == null || transactions.Count == 0)
+            {
+                return NotFound("No transactions found for the account.");
+            }
+
+            return Ok(transactions);
+        }
+
 
         /// <summary>
         /// This method is to know whether the account is present.

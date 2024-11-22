@@ -6,13 +6,12 @@ using System.Web.Mvc;
 
 namespace BMSMVC.Controllers
 {
-    public class AdminController : Controller
+    public class CustomerController : Controller
     {
-        // GET: Admin
-        public ActionResult MainBody()
+        // GET: Customer
+        public ActionResult Index()
         {
             return View();
         }
-
     }
 }
