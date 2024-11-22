@@ -31,7 +31,7 @@ namespace BMSWebApi
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins",
-                    policyBuilder => policyBuilder.AllowAnyOrigin()
+                    policyBuilder => policyBuilder.WithOrigins("https://localhost:44336")
                                                   .AllowAnyMethod()
                                                   .AllowAnyHeader());
             });

@@ -50,6 +50,28 @@ namespace BMSWebApi.Controllers
             return customer;
         }
 
+        [HttpGet("{customerId}/Accounts")]
+        public IActionResult GetAccountsByCustomerId(int customerId)
+        {
+            // Fetch accounts where CustomerId matches
+            var accounts = _context.Accounts
+                .Where(a => a.CustomerId == customerId && a.IsActive)
+                .Select(a => new
+                {
+                    a.AccountId,
+                    a.AccountType,
+                    a.Balance,
+                    a.CreatedDate
+                })
+                .ToList();
+
+            if (accounts == null || !accounts.Any())
+            {
+                return NotFound($"No accounts found for Customer ID {customerId}.");
+            }
+
+            return Ok(accounts);
+        }
 
         /// <summary>
         /// This action helps us to edit the customer details
