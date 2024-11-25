@@ -9,6 +9,10 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BMSMVC.Models;
+using BMSMVC.DTO;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace BMSMVC.Controllers
 {
@@ -17,15 +21,18 @@ namespace BMSMVC.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private readonly HttpClient _httpClient;
 
         public AccountController()
         {
+             _httpClient = new HttpClient();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _httpClient = new HttpClient();
         }
 
         public ApplicationSignInManager SignInManager
@@ -80,6 +87,7 @@ namespace BMSMVC.Controllers
             {
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
+                    //return View();
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -147,21 +155,30 @@ namespace BMSMVC.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(CustomerDTO model)
         {
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var result = await UserManager.CreateAsync(user, model.PasswordHash);
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    var json = JsonConvert.SerializeObject(model);
+                    var content = new StringContent(json,Encoding.UTF8,"application/json");
+                    HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync("https://localhost:7000/api/Customer", content);
+
+                    if (httpResponseMessage.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Login", "Account");
+                    }
 
                     return RedirectToAction("Index", "Home");
                 }

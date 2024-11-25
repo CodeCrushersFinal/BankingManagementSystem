@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BMSMVC.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +11,31 @@ namespace BMSMVC.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            SessionModel sessionModel = new SessionModel();
+            Session.Add("UserName", User.Identity.Name);
+
+            if (User.IsInRole("Admin"))
+            {
+
+                sessionModel.Role = "Admin";
+                sessionModel.Addess = "dsfdfsdfds";
+                sessionModel.Name = User.Identity.Name;
+
+                Session.Add("SessionModel", sessionModel);
+
+
+                Session.Add("Role", "Admin");
+                ViewBag.Role = "Admin";
+                return RedirectToAction("MainBody", "Admin");
+                // Logic for admin users
+            }
+            else
+            {
+                Session.Add("Role", "Customer");
+                ViewBag.Role = "Customer";
+                return RedirectToAction("Index","Customer");
+            }
+            //return View();
         }
 
         public ActionResult About()

@@ -55,13 +55,14 @@ namespace BMSWebApi.Controllers
         {
             // Fetch accounts where CustomerId matches
             var accounts = _context.Accounts
-                .Where(a => a.CustomerId == customerId && a.IsActive)
+                .Where(a => a.CustomerId == customerId)
                 .Select(a => new
                 {
                     a.AccountId,
                     a.AccountType,
                     a.Balance,
-                    a.CreatedDate
+                    a.CreatedDate,
+                    a.IsActive
                 })
                 .ToList();
 
@@ -128,7 +129,7 @@ namespace BMSWebApi.Controllers
         /// <returns>The updated new record details</returns>
 
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(CustomerDTO customerDTO)
+        public async Task<ActionResult<Customer>> PostCustomer([FromBody] CustomerDTO customerDTO)
         {
             Customer customer = new Customer();
             customer.CustomerId = customerDTO.CustomerId;
@@ -163,6 +164,12 @@ namespace BMSWebApi.Controllers
 
 
             return CreatedAtAction("GetCustomerById", new { id = customer.CustomerId }, customer );
+        }
+
+        [HttpGet("GetEmail/{email}")]
+        public async Task<ActionResult<Customer>> GetCustomerByEmail(string email)
+        {
+            return Ok(await _context.Customers.FirstAsync(customers => customers.Email.Equals(email)));
         }
 
 

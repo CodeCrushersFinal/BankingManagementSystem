@@ -1,0 +1,223 @@
+﻿
+@{
+    ViewBag.Title = "TransferMoney";
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking Transaction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
+            margin: 0;
+            padding-top: 60px; /* For navbar space */
+        }
+
+        /*        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #192677;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            z-index: 1000;
+        }*/
+
+        /*            .navbar .logo {
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+
+            .navbar .nav-links {
+                list-style: none;
+                display: flex;
+                gap: 1.5rem;
+            }
+
+                .navbar .nav-links a {
+                    color: white;
+                    text-decoration: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 5px;
+                    transition: background-color 0.3s;
+                }
+
+                    .navbar .nav-links a:hover {
+                        background-color: #333;
+                    }*/
+
+        .content-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 50px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: 400px;
+        }
+
+        .big-button {
+            background-color: #343fa1;
+            color: white;
+            padding: 20px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 35px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+            .big-button:hover {
+                transform: scale(1.05);
+            }
+
+        /* Modal Styles */
+        .form-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .form-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 350px;
+            text-align: left;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            background-color: #4c6baf;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    @*<nav class="navbar">
+            <div class="logo">Vivid Bank</div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="customer.html">Customer</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>*@
+
+    <main>
+        <div class="content-container">
+            <div class="text-container">
+                <h2>Swift, Secure, Seamless Transfers—Anywhere, Anytime.</h2>
+            </div>
+            <div class="image-container">
+                <img src="https://cdni.iconscout.com/illustration/premium/thumb/transfer-money-via-mobile-app-illustration-download-in-svg-png-gif-file-formats--online-banking-electronic-funds-eft-bank-transaction-pack-business-illustrations-9803923.png?f=webp" alt="Transaction Illustration">
+            </div>
+        </div>
+        <button class="big-button" onclick="openForm()">TRANSFER NOW</button>
+    </main>
+
+    <div class="form-modal" id="createAccountForm">
+        <div class="form-content">
+            <span class="close-btn" onclick="closeForm()">&times;</span>
+            <h2>Make a Transaction</h2>
+            <form id="transactionForm">
+                <label for="TransactionId">Transaction ID</label>
+                <input type="text" id="TransactionId" placeholder="Enter Transaction ID" required>
+
+                <label for="SenderAccountId">Sender Account ID</label>
+                <input type="text" id="SenderAccountId" placeholder="Enter Sender Account ID" required>
+
+                <label for="ReceiverAccountId">Receiver Account ID</label>
+                <input type="text" id="ReceiverAccountId" placeholder="Enter Receiver Account ID" required>
+
+                <label for="Amount">Amount</label>
+                <input type="number" id="Amount" placeholder="Enter Amount to Transfer" required>
+
+                <label for="TransactionType">Transaction Type</label>
+                <input type="text" id="TransactionType" placeholder="Enter Transaction Type" required>
+
+                <button type="submit">Transfer</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openForm() {
+            document.getElementById("createAccountForm").style.display = "flex";
+        }
+
+        function closeForm() {
+            document.getElementById("createAccountForm").style.display = "none";
+        }
+
+        document.getElementById("transactionForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const transactionData = {
+                TransactionId: parseInt(document.getElementById("TransactionId").value),
+                SenderAccountId: parseInt(document.getElementById("SenderAccountId").value),
+                RecieverAccountId: parseInt(document.getElementById("ReceiverAccountId").value),
+                Amount: parseFloat(document.getElementById("Amount").value),
+                TransactionType: document.getElementById("TransactionType").value,
+                TransactionDate: new Date().toISOString(),
+            };
+
+            fetch("https://localhost:7000/api/Transaction", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(transactionData),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Transaction Successful!");
+                    closeForm();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Transaction Failed. Please try again.");
+                });
+        });
+    </script>
+</body>
+</html>
+

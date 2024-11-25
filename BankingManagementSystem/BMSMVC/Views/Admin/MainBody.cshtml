@@ -84,6 +84,52 @@
         .action-buttons {
             display: none;
         }
+
+        .form-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            position: relative;
+        }
+
+        .form-content label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .form-content input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-content button[type="submit"] {
+            background-color: #4c68af;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-content button[type="submit"]:hover {
+            background-color: #1e2156;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -98,10 +144,15 @@
             <h2>Customer Details</h2>
             <button class="view-button" onclick="fetchCustomerDetails()">View Customer Details</button>
         </div>
-
+        <br />
         <div>
             <h2>Loan Applications</h2>
             <button class="view-button" onclick="fetchLoanApplications()">View Loan Applications</button>
+        </div>
+        <br />
+        <div>
+            <h2>Create New Account</h2>
+            <button class="view-button" onclick="openForm()">Create Account</button>
         </div>
 
         <!-- Customer Details -->
@@ -130,10 +181,14 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Account Id</th>
                         <th>Account Type</th>
                         <th>Balance</th>
                         <th>Date Created</th>
-                        <th>Actions</th>
+                        <th>IsActive</th>
+                        <th>Action</th>
+                        <th>Action</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -204,6 +259,28 @@
         </div>
     </div>
 
+    <!-- Create New Account Form Modal -->
+    <div class="form-modal" id="createAccountForm" style="display:none">
+        <div class="form-content">
+            <button class="close-btn" onclick="closeForm()">X</button>
+            <form id="createAccountFormData" onsubmit="submitForm(event)">
+                <label for="username">Account ID <span class="required" style="color:red">*</span></label>
+                <input type="text" id="username" placeholder="Enter your customerID" required>
+                <br />
+                <label for="CustomerId">Customer ID <span class="required" style="color:red">*</span></label>
+                <input type="text" id="CustomerId" placeholder="Enter your customerID" required>
+                <br />
+                <label for="AccountType">Account Type <span class="required" style="color:red">*</span></label>
+                <input type="text" id="AccountType" placeholder="Enter the account type" required>
+                <br />
+                <label for="Balance">Balance <span class="required" style="color:red">*</span></label>
+                <input type="text" id="Balance" placeholder="Enter the balance" required>
+                <br />
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         function fetchCustomerDetails() {
             $('#customerDetails').hide(); // Ensure it's hidden while loading
@@ -219,14 +296,14 @@
 
                     response.forEach(customer => {
                         const row = `
-                            <tr>
-                                <td>${customer.firstName} ${customer.lastName}</td>
-                                <td>${customer.phoneNumber}</td>
-                                <td>${customer.email}</td>
-                                <td>
-                                    <button onclick="fetchAccountDetails(${customer.customerId})">View Accounts</button>
-                                </td>
-                            </tr>`;
+                                        <tr>
+                                            <td>${customer.firstName} ${customer.lastName}</td>
+                                            <td>${customer.phoneNumber}</td>
+                                            <td>${customer.email}</td>
+                                            <td>
+                                                <button onclick="fetchAccountDetails(${customer.customerId})">View Accounts</button>
+                                            </td>
+                                        </tr>`;
                         tableBody.append(row);
                     });
 
@@ -253,17 +330,17 @@
 
                     response.forEach(loan => {
                         const row = `
-                            <tr>
-                                <td>${loan.loanId}</td>
-                                <td>${loan.customerId}</td>
-                                <td>${loan.loanAmount}</td>
-                                <td>${loan.status}</td>
-                                <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
-                                <td class="action-buttons">
-                                    <button class="approve-btn" data-loan-id="${loan.loanId}">Approve</button>
-                                    <button class="reject-btn" data-loan-id="${loan.loanId}">Reject</button>
-                                </td>
-                            </tr>`;
+                                        <tr>
+                                            <td>${loan.loanId}</td>
+                                            <td>${loan.customerId}</td>
+                                            <td>${loan.loanAmount}</td>
+                                            <td>${loan.status}</td>
+                                            <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
+                                            <td class="action-buttons">
+                                                <button class="approve-btn" data-loan-id="${loan.loanId}">Approve</button>
+                                                <button class="reject-btn" data-loan-id="${loan.loanId}">Reject</button>
+                                            </td>
+                                        </tr>`;
                         tableBody.append(row);
                     });
 
@@ -307,14 +384,14 @@
                     $('#loanTable tbody').empty();
                     data.forEach(loan => {
                         $('#loanTable tbody').append(`
-                            <tr>
-                                <td>${loan.loanId}</td>
-                                <td>${loan.customerId}</td>
-                                <td>${loan.loanAmount}</td>
-                                <td>${loan.status}</td>
-                                <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
-                            </tr>
-                        `);
+                                        <tr>
+                                            <td>${loan.loanId}</td>
+                                            <td>${loan.customerId}</td>
+                                            <td>${loan.loanAmount}</td>
+                                            <td>${loan.status}</td>
+                                            <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
+                                        </tr>
+                                    `);
                     });
                 },
                 error: function () {
@@ -333,14 +410,19 @@
 
                     response.forEach(account => {
                         const row = `
-                                            <tr>
-                                                <td>${account.accountType}</td>
-                                                <td>${account.balance}</td>
-                                                <td>${new Date(account.createdDate).toLocaleDateString()}</td>
-                                                <td>
-                                                    <button onclick="fetchTransactionDetails(${account.accountId})">View Transactions</button>
-                                                </td>
-                                            </tr>`;
+                                                        <tr>
+                                                            <td>${account.accountId}</td>
+                                                            <td>${account.accountType}</td>
+                                                            <td>${account.balance}</td>
+                                                            <td>${new Date(account.createdDate).toLocaleDateString()}</td>
+                                                            <td>${account.isActive}</td>
+                                                            <td>
+                                                                <button onclick="updateIsActive(${account.accountId})">${account.isActive ? "Deactivate" : "Activate"}</button>
+                                                            </td>
+                                                            <td>
+                                                                <button onclick="fetchTransactionDetails(${account.accountId})">View Transactions</button>
+                                                            </td>
+                                                        </tr>`;
                         tableBody.append(row);
                     });
 
@@ -365,21 +447,21 @@
 
                     response.receivers.forEach(receiver => {
                         const creditedRow = `
-                        <tr>
-                            <td>${receiver.receiverTransactionId}</td>
-                            <td>${receiver.receiverAccountId}</td>
-                            <td>${receiver.receivedAmount}</td>
-                        </tr>`;
+                                    <tr>
+                                        <td>${receiver.receiverTransactionId}</td>
+                                        <td>${receiver.receiverAccountId}</td>
+                                        <td>${receiver.receivedAmount}</td>
+                                    </tr>`;
                         creditedTableBody.append(creditedRow);
                     });
 
                     response.transactions.forEach(transaction => {
                         const debitedRow = `
-                        <tr>
-                            <td>${transaction.transactionId}</td>
-                            <td>${transaction.amount}</td>
-                            <td>${new Date(transaction.transactionDate).toLocaleDateString()}</td>
-                        </tr>`;
+                                    <tr>
+                                        <td>${transaction.transactionId}</td>
+                                        <td>${transaction.amount}</td>
+                                        <td>${new Date(transaction.transactionDate).toLocaleDateString()}</td>
+                                    </tr>`;
                         debitedTableBody.append(debitedRow);
                     });
 
@@ -387,6 +469,35 @@
                 },
                 error: function () {
                     alert('Error fetching transaction data.');
+                }
+            });
+        }
+
+        function updateIsActive(accountId) {
+            // Get the current button and its text to determine the current state
+            const button = $(`#accountDetails tbody button[onclick='updateIsActive(${accountId})']`);
+            const currentState = button.text() === "Deactivate"; // If Deactivate, IsActive = true
+
+            // Prepare the data payload
+            const payload = { accountId: accountId, isActive: !currentState };
+
+            $.ajax({
+                url: `https://localhost:7000/api/Account/${accountId}/ToggleActiveStatus`, // Update the API endpoint if necessary
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(payload), // Convert payload to JSON string
+                success: function () {
+                    alert(`Account ${accountId} has been ${currentState ? "deactivated" : "activated"} successfully.`);
+
+                    // Update the button text dynamically
+                    button.text(currentState ? "Activate" : "Deactivate");
+
+                    // Optionally update the 'IsActive' column in the table
+                    const isActiveCell = button.closest('tr').find('td:nth-child(5)');
+                    isActiveCell.text(!currentState);
+                },
+                error: function () {
+                    alert(`Failed to ${currentState ? "deactivate" : "activate"} the account. Please try again.`);
                 }
             });
         }
@@ -399,6 +510,38 @@
             $('#transactionDetails').hide();
         }
 
+        function openForm() {
+            document.getElementById("createAccountForm").style.display = "flex";  // Show the form
+        }
+
+        function closeForm() {
+            document.getElementById("createAccountForm").style.display = "none";  // Hide the form
+        }
+
+        function submitForm(event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            const formData = {
+                AccountID: document.getElementById('username').value,
+                CustomerId: document.getElementById('CustomerId').value,
+                AccountType: document.getElementById('AccountType').value,
+                Balance: document.getElementById('Balance').value
+            };
+
+            $.ajax({
+                url: 'https://localhost:7000/api/Account',  // Your backend API endpoint here
+                method: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',  // Ensure data is sent as JSON
+                success: function (response) {
+                    alert("Account created successfully!");
+                    closeForm();  // Close the modal form
+                },
+                error: function (error) {
+                    alert("Error creating account. Please try again.");
+                }
+            });
+        }
     </script>
 
 </body>

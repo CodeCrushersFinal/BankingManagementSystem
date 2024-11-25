@@ -1,8 +1,71 @@
-﻿@model BMSMVC.Models.RegisterViewModel
+﻿@model BMSMVC.DTO.CustomerDTO
 @{
     ViewBag.Title = "Register";
 }
+<head>
+    <style>
+    body {
+    font-family: Arial, sans-serif;
+    /* background-color: #bdbde8; */
+    background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
+    margin: 0;
+    padding-top: 60px; /* To avoid content being hidden under the navbar */
+    }
+    .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #192677;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 2rem;
+    z-index: 1000;
+    }
 
+    .form-modal {
+    /display: none;/ /* Hidden by default */
+    position: fixed;
+    top: 300px;
+    left: 300px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    }
+
+    /*        .form-content {
+    background-color: #d2e3eff0;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 400px;
+    position: center;
+    text-align: center;
+    }*/
+    .row {
+    text-align: center;
+    padding: 4px;
+    font-size: 20px;
+    }
+    .col-md-10 {
+
+    padding: 2px
+    }
+
+    .btn  {
+    background-color: #2b4d75;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.7rem 1.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    }
+    </style>
+</head>
 <main aria-labelledby="title">
     <h2 id="title">@ViewBag.Title.</h2>
 
@@ -12,6 +75,25 @@
         <h4>Create a new account.</h4>
         <hr />
         @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div  class="form-content">
+        <div class="row">
+            @Html.LabelFor(m => m.CustomerId, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.CustomerId, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+            </div>
+        </div>
         <div class="row">
             @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
             <div class="col-md-10">
@@ -19,22 +101,35 @@
             </div>
         </div>
         <div class="row">
-            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
+            @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-2 col-form-label" })
             <div class="col-md-10">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
             </div>
         </div>
         <div class="row">
+            @Html.LabelFor(m => m.Address, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            @Html.LabelFor(m => m.PasswordHash, new { @class = "col-md-2 col-form-label" })
+            <div class="col-md-10">
+                @Html.PasswordFor(m => m.PasswordHash, new { @class = "form-control" })
+            </div>
+        </div>
+      @*  <div class="row">
             @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 col-form-label" })
             <div class="col-md-10">
                 @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
             </div>
-        </div>
+        </div>*@
         <div class="row">
             <div class="offset-md-2 col-md-10">
                 <input type="submit" value="Register" class="btn btn-outline-dark" />
             </div>
         </div>
+            </div>
     }
 </main>
 

@@ -173,12 +173,15 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DTO\LoginDTO.cs" />
+    <Compile Include="DTO\CustomerDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -255,6 +258,12 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Admin\MainBody.cshtml" />
+    <Content Include="Views\Customer\TransferMoney.cshtml" />
+    <Content Include="Views\Customer\TransactionHistory.cshtml" />
+    <Content Include="Views\Customer\CreateAccount.cshtml" />
+    <Content Include="Views\Customer\CheckBalance.cshtml" />
+    <Content Include="Views\Customer\ApplyLoan.cshtml" />
+    <Content Include="Views\Customer\DepositWithdraw.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

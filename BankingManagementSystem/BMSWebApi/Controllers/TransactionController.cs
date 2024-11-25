@@ -130,7 +130,7 @@ namespace BMSWebApi.Controllers
                 _context.Receivers.Add(receiver);
 
                 //Write your logic here
-                _context.Transactions.Add(transaction);
+              
 
                 _context.Transactions.Add(transaction);
                 await _context.SaveChangesAsync();

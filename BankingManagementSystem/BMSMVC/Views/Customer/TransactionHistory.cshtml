@@ -1,0 +1,179 @@
+﻿
+@{
+    ViewBag.Title = "TransactionHistory";
+}
+
+<style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
+            margin: 0;
+            
+        }
+
+</style>
+
+<!-- Input for Account ID -->
+<div>
+    <label for="accountId">Account ID:</label>
+    <input type="text" id="accountId" placeholder="Enter Account ID" />
+    <button id="getTransactions" type="button">Get Transactions</button>
+    <button id="downloadData" type="button" style="display:none">Download Transactions</button>
+</div>
+
+<!-- Div to display the transaction details -->
+<div id="transactionDetails" style="margin-top: 20px;">
+    <!-- Transaction details will be dynamically populated here -->
+</div>
+
+<!-- Include jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        let transactionsData = [];
+
+        $("#getTransactions").click(function () {
+            var accountId = $("#accountId").val();
+
+            // Validate input
+            if (!accountId) {
+                alert("Please enter an Account ID");
+                return;
+            }
+
+            // AJAX request to fetch data
+            $.ajax({
+                url: 'https://localhost:7000/api/Transaction/GetAccountTransactions', // Use the correct URL
+                type: 'GET',
+                data: { accountId: accountId },
+                success: function (response) {
+                    console.log(response); // Log the response to inspect the structure
+
+                    // Ensure transactions and receivers are not undefined or null
+                    if (!response.transactions || !response.receivers) {
+                        $("#transactionDetails").html("<p>Error: Invalid response structure.</p>");
+                        return;
+                    }
+
+                    if (response.transactions.length === 0 && response.receivers.length === 0) {
+                        $("#transactionDetails").html("<p>No transactions found for this account.</p>");
+                        $("#downloadData").hide();
+                        return;
+                    }
+
+                    transactionsData = [];
+
+                    // Separate tables for debited and credited transactions
+                    let debitedHtml = `
+                    <h3>Debited Transactions</h3>
+                    <table border="1" style="width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 20px;">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+
+                    let creditedHtml = `
+                    <h3>Credited Transactions</h3>
+                    <table border="1" style="width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 20px;">
+                        <thead>
+                            <tr>
+                                <th>Receiver Transaction ID</th>
+                                <th>Receiver Account ID</th>
+                                <th>Received Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+
+                    // Populate debited transactions
+                    response.transactions.forEach(transaction => {
+                        debitedHtml += `
+                        <tr>
+                            <td>${transaction.transactionId || 'N/A'}</td>
+                            <td>${transaction.amount || 'N/A'}</td>
+                            <td>${transaction.transactionDate || 'N/A'}</td>
+                        </tr>
+                        `;
+                        transactionsData.push({
+                            AccountID: transaction.accountId,
+                            Type: 'Debited',
+                            TransactionID: transaction.transactionId || 'N/A',
+                            Amount: transaction.amount || 'N/A'
+                        });
+                    });
+
+                    // Populate credited transactions
+                    response.receivers.forEach(receiver => {
+                        creditedHtml += `
+                        <tr>
+                            <td>${receiver.receiverTransactionId || 'N/A'}</td>
+                            <td>${receiver.receiverAccountId || 'N/A'}</td>
+                            <td>${receiver.receivedAmount || 'N/A'}</td>
+                        </tr>
+                        `;
+                        transactionsData.push({
+                            AccountID: receiver.receiverAccountId,
+                            Type: 'Credited',
+                            TransactionID: receiver.receiverTransactionId || 'N/A',
+                            Amount: receiver.receivedAmount || 'N/A',
+                        })
+                    });
+
+                    // Close the tables
+                    debitedHtml += `
+                        </tbody>
+                    </table>
+                    `;
+
+                    creditedHtml += `
+                        </tbody>
+                    </table>
+                    `;
+
+                    // Append both tables to the page
+                    $("#transactionDetails").html(debitedHtml + creditedHtml);
+                    $("#downloadData").show();
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    $("#transactionDetails").html("<p>An error occurred while fetching transactions.</p>");
+                    $("#downloadData").hide();
+                }
+            });
+        });
+
+        $("#downloadData").click(function () {
+            if (transactionsData.length === 0) {
+                alert("No data to download.");
+                return;
+            }
+
+            // Convert data to CSV
+            const csvContent = "data:text/csv;charset=utf-8,"
+                + ["Type,TransactionID,Amount,Date,ReceiverAccount"]
+                    .concat(transactionsData.map(row =>
+                        `${row.Type},${row.TransactionID},${row.Amount},${row.Date || ''},${row.ReceiverAccount || ''}`
+                    ))
+                    .join("\n");
+
+            // Create a download link
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "transactions.csv");
+            document.body.appendChild(link);
+
+            link.click(); // Trigger download
+            document.body.removeChild(link); // Clean up
+        });
+});
+</script>
+

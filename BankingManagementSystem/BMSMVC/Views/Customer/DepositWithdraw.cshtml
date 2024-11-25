@@ -1,0 +1,242 @@
+﻿@{
+    ViewBag.Title = "DepositWithdraw";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw Money</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
+            margin: 0;
+            /*padding-top: 60px;*/ /* For navbar space */
+        }
+
+        .content-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 50px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: 400px;
+        }
+
+        .big-button {
+            background-color: #343fa1;
+            color: white;
+            padding: 20px 40px;
+            font-size: 24px;
+            border: none;
+            border-radius: 35px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+            .big-button:hover {
+                transform: scale(1.05);
+            }
+
+        /* Modal Styles */
+        .form-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .form-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 350px;
+            text-align: left;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            background-color: #4c6baf;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="content-container">
+            <div class="text-container">
+                <h2>Swift, Secure, Seamless Transfers—Anywhere, Anytime.</h2>
+            </div>
+            <div class="image-container">
+                <img src="https://cdni.iconscout.com/illustration/premium/thumb/transfer-money-via-mobile-app-illustration-download-in-svg-png-gif-file-formats--online-banking-electronic-funds-eft-bank-transaction-pack-business-illustrations-9803923.png?f=webp" alt="Transaction Illustration">
+            </div>
+        </div>
+
+        <!-- Deposit and Withdraw Section -->
+        <button class="big-button" onclick="openDepositForm()">DEPOSIT NOW</button>
+        <button class="big-button" onclick="openWithdrawForm()">WITHDRAW NOW</button>
+    </main>
+
+    <!-- Deposit Modal -->
+    <div class="form-modal" id="depositForm">
+        <div class="form-content">
+            <!-- Close Button for Deposit -->
+            <span class="close-btn" onclick="closeDepositForm()">&times;</span>
+            <h2>Deposit Funds</h2>
+            <form id="depositFormDetails">
+                <label for="AccountIdDeposit">Account ID</label>
+                <input type="text" id="AccountIdDeposit" placeholder="Enter Account ID" required>
+
+                <label for="AmountDeposit">Amount</label>
+                <input type="number" id="AmountDeposit" placeholder="Enter Amount" required>
+
+                <button type="submit" id="depositButton">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div class="form-modal" id="withdrawForm">
+        <div class="form-content">
+            <!-- Close Button for Withdraw -->
+            <span class="close-btn" onclick="closeWithdrawForm()">&times;</span>
+            <h2>Withdraw Funds</h2>
+            <form id="withdrawFormDetails">
+                <label for="AccountIdWithdraw">Account ID</label>
+                <input type="text" id="AccountIdWithdraw" placeholder="Enter Account ID" required>
+
+                <label for="AmountWithdraw">Amount</label>
+                <input type="number" id="AmountWithdraw" placeholder="Enter Amount" required>
+
+                <button type="submit" id="withdrawButton">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Function to open Deposit form
+        function openDepositForm() {
+            document.getElementById("depositForm").style.display = "flex";
+        }
+
+        // Function to close Deposit form
+        function closeDepositForm() {
+            document.getElementById("depositForm").style.display = "none";
+        }
+
+        // Function to open Withdraw form
+        function openWithdrawForm() {
+            document.getElementById("withdrawForm").style.display = "flex";
+        }
+
+        // Function to close Withdraw form
+        function closeWithdrawForm() {
+            document.getElementById("withdrawForm").style.display = "none";
+        }
+
+        // Handle Deposit form submission
+        document.getElementById("depositFormDetails").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const accountId = document.getElementById("AccountIdDeposit").value;
+            const amount = parseFloat(document.getElementById("AmountDeposit").value);
+
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+
+            const transactionData = amount;
+
+            fetch(`https://localhost:7000/api/Account/${accountId}/Deposit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(transactionData),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        closeDepositForm();
+                    } else {
+                        alert("Something went wrong. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Transaction failed. Please try again later.');
+                });
+        });
+
+        // Handle Withdraw form submission
+        document.getElementById("withdrawFormDetails").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const accountId = document.getElementById("AccountIdWithdraw").value;
+            const amount = parseFloat(document.getElementById("AmountWithdraw").value);
+
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+
+            const transactionData = amount;
+
+            fetch(`https://localhost:7000/api/Account/${accountId}/Withdraw`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(transactionData),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        closeWithdrawForm();
+                    } else {
+                        alert("Something went wrong. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Transaction failed. Please try again later.');
+                });
+        });
+    </script>
+</body>
+</html>
