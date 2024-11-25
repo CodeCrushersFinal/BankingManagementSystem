@@ -3,15 +3,56 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css") 
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - VIVID BANK</title>
+    <style>
+            .navbar {
+                position: fixed;
+                top: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #192677;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 2rem;
+                z-index: 1000;
+            }
+
+           
+            .nav-links li {
+                display: inline;
+            }
+
+        .nav-links a {
+            text-align: end;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s, background-color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            margin-right:40px;
+        }
+
+                /* Hover Effect */
+                .nav-links a:hover {
+                    color: #ddd;
+                }
+        .menucontainer {
+            /*            text-align:end;*/
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            gap: 3px;
+        }
+    </style>
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
-            <h2>VIVID BANK</h2>
+    <nav class="navbar ">
+        <h2>VIVID BANK</h2>
+        <div class="menucontainer">
             @Html.Partial("_LoginPartial")
         </div>
     </nav>
@@ -19,7 +60,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Vivid Bank</p>
+            <p>&copy; @DateTime.Now.Year - VIVID BANK</p>
         </footer>
     </div>
 

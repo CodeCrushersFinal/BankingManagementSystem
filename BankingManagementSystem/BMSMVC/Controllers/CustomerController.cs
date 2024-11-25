@@ -37,5 +37,15 @@ namespace BMSMVC.Controllers
         {
             return View();
         }
+
+        public ActionResult DepositWithdraw()
+        {
+            return View();
+        }
+
+        public ActionResult Profile()
+        {
+            return View();
+        }
     }
 }

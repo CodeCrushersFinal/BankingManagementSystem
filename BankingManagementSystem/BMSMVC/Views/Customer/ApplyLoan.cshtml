@@ -15,7 +15,7 @@
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
             margin: 0;
-            /*padding-top: 60px;*/ /* To avoid content being hidden under the navbar */
+            padding-top: 60px; /* To avoid content being hidden under the navbar */
         }
 
         h1 {
@@ -53,77 +53,29 @@
         }
 
         #applyButton {
-            background-color: #28a745;
+            background-color: #2b4d75;
             color: white;
+        }
+        #applyButton:hover {
+            background-color: #0c1c35;
         }
 
         #resetButton {
-            background-color: #dc3545;
+            background-color: #2b4d75;
             color: white;
         }
+        #resetButton:hover {
+            background-color: #0c1c35;
+        }
+
 
         #responseMessage {
             font-weight: bold;
             text-align: center;
         }
-
-        /*        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: #192677;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }*/
-
-        /*        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 1.5rem;
-        }
-
-            .nav-links li {
-                display: inline;
-            }
-
-            .nav-links a {
-                color: white;
-                text-decoration: none;
-                font-size: 1rem;
-                transition: color 0.3s, background-color 0.3s;
-                padding: 0.5rem 1rem;
-                border-radius: 5px;
-            }
-
-                .nav-links a:hover {
-                    color: #ddd;
-                }*/
-
-        /*                .nav-links a.active {
-                    background-color: #333;
-                    color: #fff;
-                    font-weight: bold;
-                }*/
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <div class="logo">My Bank</div>
-        @*<ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Loans</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>*@
-    </div>
 
     <h1>Apply for a Loan</h1>
     <form id="applyLoanForm">
@@ -149,6 +101,7 @@
     <p id="responseMessage"></p>
 
     <script>
+
         $(document).ready(function () {
             // Set the current date and time to the Application Date input field
             const currentDate = new Date().toISOString().slice(0, 16); // Format as YYYY-MM-DDTHH:MM

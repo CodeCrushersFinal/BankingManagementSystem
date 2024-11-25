@@ -1,6 +1,5 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "CustomerMain";
 }
 
 <!DOCTYPE html>
@@ -23,7 +22,7 @@
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             font-size: 50px;
             text-align: center;
-            margin-top: 20px; /* Adjust the margin as needed */
+            margin-top: 100px; /* Adjust the margin as needed */
         }
 
         .tagline {
@@ -250,6 +249,7 @@
 </head>
 <body>
 
+
     <h1 class="bank-name">Vivid Bank</h1>
     <h2 class="tagline"> Clear , Colourful and dependable </h2>
 
@@ -290,11 +290,12 @@
                     <p>Get financial support for your needs with our loan services.</p>
                 </div>
             </div>
-            <div class="card" onclick="window.location.href='@Url.Action("ApplyLoan","Customer")'">
+
+            <div class="card" onclick="window.location.href='@Url.Action("DepositWithdraw","Customer")'">
                 <div class="card-image" style="background-image: url('https://www.bruningbank.com/sites/default/files/styles/front_page/public/2024-10/banking.jpeg?itok=jotKVvlO');"></div>
                 <div class="card-content">
-                    <h2>Deposit and Withdraw</h2>
-                    <p>Manage your money in a snap</p>
+                    <h2>Deposit & Withdraw</h2>
+                    <p>Get financial support for your needs with our loan services.</p>
                 </div>
             </div>
 
@@ -330,15 +331,15 @@
 
     <script>
     document.querySelector(".nav-link-customer").addEventListener("click", function (e) {
-    e.preventDefault();
+            e.preventDefault();
 
             fetch("/Customer/IndexPage")
-        .then(response => response.text())
-        .then(htmlContent => {
-            document.getElementById("main-content").innerHTML = htmlContent;
-        })
-        .catch(error => console.error("Error loading customer page:", error));
-});
+                .then(response => response.text())
+                .then(htmlContent => {
+                    document.getElementById("main-content").innerHTML = htmlContent;
+                })
+                .catch(error => console.error("Error loading customer page:", error));
+        });
 
         document.addEventListener("DOMContentLoaded", function () {
             const cards = document.querySelectorAll(".card");
@@ -352,7 +353,7 @@
                             if (response.ok) {
                                 return response.text(); // Return the HTML content
                             } else {
-                                throw new Error(`Error loading page: ${response.statusText}`);
+                                throw new Error(Error loading page: ${ response.statusText });
                             }
                         })
                         .then(htmlContent => {
@@ -368,4 +369,3 @@
     </script>
 </body>
 </html>
-

@@ -173,7 +173,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="DTO\LoginDTO.cs" />
+    <Compile Include="DTO\CustomerResponseDTO.cs" />
     <Compile Include="DTO\CustomerDTO.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -262,8 +262,9 @@
     <Content Include="Views\Customer\TransactionHistory.cshtml" />
     <Content Include="Views\Customer\CreateAccount.cshtml" />
     <Content Include="Views\Customer\CheckBalance.cshtml" />
-    <Content Include="Views\Customer\ApplyLoan.cshtml" />
     <Content Include="Views\Customer\DepositWithdraw.cshtml" />
+    <Content Include="Views\Customer\ApplyLoan.cshtml" />
+    <Content Include="Views\Customer\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -5,126 +5,209 @@
 }
 
 <head>
+    @*<style>
+                body {
+                    font-family: Arial, sans-serif;
+                    /* background-color: #bdbde8; */
+                    background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
+                    margin: 0;
+                    padding-top: 60px; /* To avoid content being hidden under the navbar */
+                }
+
+                .navbar {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    background-color: #192677;
+                    color: white;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 0.5rem 2rem;
+                    z-index: 1000;
+                }
+
+                .form-modal {
+                    /display: none;
+                    / /* Hidden by default */
+                    position: fixed;
+                    top: 300px;
+                    left: 300px;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                }
+
+                /*        .form-content {
+            background-color: #d2e3eff0;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 400px;
+            position: center;
+            text-align: center;
+            }*/
+                .row {
+                    text-align: center;
+                    padding: 4px;
+                    font-size: 20px;
+                }
+
+                .col-md-10 {
+                    padding: 2px
+                }
+
+                .btn {
+                    background-color: #2b4d75;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 0.7rem 1.5rem;
+                    cursor: pointer;
+                    font-size: 1rem;
+                }
+        </style>*@
+
     <style>
-            body {
-                font-family: Arial, sans-serif;
-                /* background-color: #bdbde8; */
-                background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
-                margin: 0;
-                padding-top: 60px; /* To avoid content being hidden under the navbar */
-            }
+        body {
+            font-family: Arial, sans-serif;
+            /* background-color: #bdbde8; */
+            background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
+            margin: 0;
+            padding-top: 60px; /* To avoid content being hidden under the navbar */
+        }
 
-            .navbar {
-                position: fixed;
-                top: 0;
-                width: 100%;
-                background-color: #192677;
-                color: white;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 0.5rem 2rem;
-                z-index: 1000;
-            }
+        h4{
+            font-size: 20px;
+        }
 
-            .form-modal {
-                /display: none;
-                / /* Hidden by default */
-                position: fixed;
-                top: 300px;
-                left: 300px;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-            }
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #192677;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 2rem;
+            z-index: 1000;
+        }
 
-            /*        .form-content {
-        background-color: #d2e3eff0;
-        padding: 2rem;
-        border-radius: 10px;
-        width: 400px;
-        position: center;
-        text-align: center;
-        }*/
-            .row {
-                text-align: center;
-                padding: 4px;
-                font-size: 20px;
-            }
+        .form-modal {
+            /display: none;
+            / /* Hidden by default */
+            position: fixed;
+            top: 300px;
+            left: 300px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
 
-            .col-md-10 {
-                padding: 2px
-            }
+        .form-content {
+            background-color: #d2e3eff0;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 400px;
+            position: center;
+            text-align: center;
+            margin: auto;
+        }
 
-            .btn {
-                background-color: #2b4d75;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                padding: 0.7rem 1.5rem;
-                cursor: pointer;
-                font-size: 1rem;
-            }
+        .row {
+            text-align: left;
+            padding: 8px;
+            font-size: 20px;
+            justify-content: space-between;
+            display: flex;
+            max-height: 50px;
+        }
+
+        .col-md-10 {
+            height: 25px;
+            width: 250px;
+            padding-bottom: 3px;
+            border-radius: 10px;
+        }
+
+        .btn {
+            background-color: #2b4d75;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.7rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            align-items: center;
+            margin-top: 30px;
+        }
     </style>
 </head>
 
 <body aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <div class="row">
+    <h2 id="title" style="text-align: center; padding-top: 30px;">Login.</h2>
+    
         <div class="col-md-8">
             <section id="loginForm">
                 @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
                 {
                     @Html.AntiForgeryToken()
-                    <h4>Use a local account to log in.</h4>
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="row">
-                        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
-                        <div class="col-md-10">
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="row">
-                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
-                        <div class="col-md-10">
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="offset-md-2 col-md-10">
-                            <div class="checkbox">
-                                @Html.CheckBoxFor(m => m.RememberMe)
-                                @Html.LabelFor(m => m.RememberMe)
+                    <h4 style="text-align: center; padding-top: 30px;">Use a local account to log in.</h4>
+                    <div class="form-content">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="row">
+                            @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.Email, new { @class = "col-md-10" })
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "col-md-10" })
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="offset-md-2 col-md-10">
-                            <input type="submit" value="Log in" class="btn btn-outline-dark" />
+                        <div class="row">
+                            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
+                            <div class="col-md-10">
+                                @Html.PasswordFor(m => m.Password, new { @class = "col-md-10" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger col-md-10" })
+                            </div>
                         </div>
-                    </div>
-                    <p>
-                        @Html.ActionLink("Register as a new user", "Register")
-                    </p>
-                    @* Enable this once you have account confirmation enabled for password reset functionality
+                       
+                        <div class="row">
+                            <div class="offset-md-2 col-md-10">
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(m => m.RememberMe)
+                                    @Html.LabelFor(m => m.RememberMe)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="offset-md-2 col-md-10">
+                                <input type="submit" value="Log in" class="btn btn-outline-dark" />
+                            </div>
+                        </div>
                         <p>
-                            @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                        </p>*@
-                }
-            </section>
+                            @Html.ActionLink("Register as a new user", "Register")
+                        </p>
+                        </div>
+                        @* Enable this once you have account confirmation enabled for password reset functionality
+                <p>
+                    @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                </p>*@
+                        }
+                </section>
+        
         </div>
-        <div class="col-md-4">
+        @*<div class="col-md-4">
             <section id="socialLoginForm">
                 @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
             </section>
-        </div>
-    </div>
+        </div>*@
+    
 </body>
 
 @section Scripts {
