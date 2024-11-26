@@ -13,7 +13,7 @@
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
-            margin: 0;
+            margin-top: 100px;
             /*            padding-top: 60px;*/
         }
 
@@ -105,30 +105,36 @@
             position: relative;
         }
 
-        .form-content label {
-            display: block;
-            margin: 5px 0;
-        }
+            .form-content label {
+                display: block;
+                margin: 5px 0;
+            }
 
-        .form-content input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+            .form-content input {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
 
-        .form-content button[type="submit"] {
-            background-color: #4c68af;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+            .form-content button[type="submit"] {
+                background-color: #4c68af;
+                color: white;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
 
-        .form-content button[type="submit"]:hover {
-            background-color: #1e2156;
+                .form-content button[type="submit"]:hover {
+                    background-color: #1e2156;
+                }
+        .loanButton{
+            position:absolute;
+            top:490px;
+            left:25px;
+            margin-bottom: 50px;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -145,10 +151,10 @@
             <button class="view-button" onclick="fetchCustomerDetails()">View Customer Details</button>
         </div>
         <br />
-        <div>
+        @*<div>
             <h2>Loan Applications</h2>
             <button class="view-button" onclick="fetchLoanApplications()">View Loan Applications</button>
-        </div>
+        </div>*@
         <br />
         <div>
             <h2>Create New Account</h2>
@@ -233,7 +239,7 @@
 
 
         <!-- Loan Application Details -->
-        <div id="loanDetails" class="details-container">
+        <!--<div id="loanDetails" class="details-container">
             <button class="close-btn" onclick="closeLoanDetails()">Close</button>
             <h2>Loan Application List</h2>
             <div id="loanButtons">
@@ -252,11 +258,11 @@
                         <th class="action-buttons">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody>-->
                     <!-- Loan data will be populated here dynamically -->
-                </tbody>
+                <!--</tbody>
             </table>
-        </div>
+        </div>-->
     </div>
 
     <!-- Create New Account Form Modal -->
@@ -281,6 +287,35 @@
         </div>
     </div>
 
+    <div>
+        <h2 style="padding-left:20px">Loan Applications</h2>
+        <h2 id="tableTitle" style="display: none;">Loan Application List</h2>
+        <div style="text-align: center;">
+            <button id="loadLoanApplicationList" class="loanButton" >Loan Application List</button>
+            <button id="closeLoanApplicationList" style="display: none;">Close</button>
+        </div>
+        <div id="loanButtons" style="display: none;">
+            <button id="showPendingLoans">Show Pending Loans</button>
+            <button id="showApprovedLoans">Show Approved Loans</button>
+            <button id="showRejectedLoans">Show Rejected Loans</button>
+        </div>
+        <table id="loanTable">
+            <thead>
+                <tr>
+                    <th>Loan ID</th>
+                    <th>Customer ID</th>
+                    <th>Loan Amount</th>
+                    <th>Status</th>
+                    <th>Application Date</th>
+                    <th class="action-buttons">Actions</th> <!-- Actions column, will be hidden for approved/rejected loans -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loan data will be populated here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
     <script>
         function fetchCustomerDetails() {
             $('#customerDetails').hide(); // Ensure it's hidden while loading
@@ -296,14 +331,14 @@
 
                     response.forEach(customer => {
                         const row = `
-                                        <tr>
-                                            <td>${customer.firstName} ${customer.lastName}</td>
-                                            <td>${customer.phoneNumber}</td>
-                                            <td>${customer.email}</td>
-                                            <td>
-                                                <button onclick="fetchAccountDetails(${customer.customerId})">View Accounts</button>
-                                            </td>
-                                        </tr>`;
+                                            <tr>
+                                                <td>${customer.firstName} ${customer.lastName}</td>
+                                                <td>${customer.phoneNumber}</td>
+                                                <td>${customer.email}</td>
+                                                <td>
+                                                    <button onclick="fetchAccountDetails(${customer.customerId})">View Accounts</button>
+                                                </td>
+                                            </tr>`;
                         tableBody.append(row);
                     });
 
@@ -316,89 +351,89 @@
             });
         }
 
-        function fetchLoanApplications() {
-            $('#loanDetails').hide(); // Ensure it's hidden while loading
-            $('body').append('<div id="loading">Loading...</div>'); // Show loading indicator
+        //function fetchLoanApplications() {
+        //    $('#loanDetails').hide(); // Ensure it's hidden while loading
+        //    $('body').append('<div id="loading">Loading...</div>'); // Show loading indicator
 
-            $.ajax({
-                url: 'https://localhost:7000/api/Loan', // Replace with your API endpoint for loan applications
-                method: 'GET',
-                success: function (response) {
-                    $('#loading').remove(); // Remove loading indicator
-                    const tableBody = $('#loanTable tbody');
-                    tableBody.empty();
+        //    $.ajax({
+        //        url: 'https://localhost:7000/api/Loan', // Replace with your API endpoint for loan applications
+        //        method: 'GET',
+        //        success: function (response) {
+        //            $('#loading').remove(); // Remove loading indicator
+        //            const tableBody = $('#loanTable tbody');
+        //            tableBody.empty();
 
-                    response.forEach(loan => {
-                        const row = `
-                                        <tr>
-                                            <td>${loan.loanId}</td>
-                                            <td>${loan.customerId}</td>
-                                            <td>${loan.loanAmount}</td>
-                                            <td>${loan.status}</td>
-                                            <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
-                                            <td class="action-buttons">
-                                                <button class="approve-btn" data-loan-id="${loan.loanId}">Approve</button>
-                                                <button class="reject-btn" data-loan-id="${loan.loanId}">Reject</button>
-                                            </td>
-                                        </tr>`;
-                        tableBody.append(row);
-                    });
+        //            response.forEach(loan => {
+        //                const row = `
+        //                                    <tr>
+        //                                        <td>${loan.loanId}</td>
+        //                                        <td>${loan.customerId}</td>
+        //                                        <td>${loan.loanAmount}</td>
+        //                                        <td>${loan.status}</td>
+        //                                        <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
+        //                                        <td class="action-buttons">
+        //                                            <button class="approve-btn" data-loan-id="${loan.loanId}">Approve</button>
+        //                                            <button class="reject-btn" data-loan-id="${loan.loanId}">Reject</button>
+        //                                        </td>
+        //                                    </tr>`;
+        //                tableBody.append(row);
+        //            });
 
-                    $('#loanDetails').show(); // Show loan application details
-                },
-                error: function () {
-                    $('#loading').remove(); // Remove loading indicator
-                    alert('Error fetching loan applications.');
-                }
-            });
-        }
+        //            $('#loanDetails').show(); // Show loan application details
+        //        },
+        //        error: function () {
+        //            $('#loading').remove(); // Remove loading indicator
+        //            alert('Error fetching loan applications.');
+        //        }
+        //    });
+        //}
 
         function closeCustomerDetails() {
             $('#customerDetails').hide();
         }
 
-        function closeLoanDetails() {
-            $('#loanDetails').hide();
-        }
+        //function closeLoanDetails() {
+        //    $('#loanDetails').hide();
+        //}
 
         // Event listeners for loan type buttons
-        $('#showPendingLoans').click(function () {
-            loadLoans("Pending");
-        });
+        //$('#showPendingLoans').click(function () {
+        //    loadLoans("Pending");
+        //});
 
-        $('#showApprovedLoans').click(function () {
-            loadLoans("Approved");
-        });
+        //$('#showApprovedLoans').click(function () {
+        //    loadLoans("Approved");
+        //});
 
-        $('#showRejectedLoans').click(function () {
-            loadLoans("Rejected");
-        });
+        //$('#showRejectedLoans').click(function () {
+        //    loadLoans("Rejected");
+        //});
 
         // Function to load loans by status
-        function loadLoans(status) {
-            const apiUrl = "https://localhost:7000/api/Loan"; // Replace with your API base URL
-            $.ajax({
-                url: `${apiUrl}/${status}`,
-                type: 'GET',
-                success: function (data) {
-                    $('#loanTable tbody').empty();
-                    data.forEach(loan => {
-                        $('#loanTable tbody').append(`
-                                        <tr>
-                                            <td>${loan.loanId}</td>
-                                            <td>${loan.customerId}</td>
-                                            <td>${loan.loanAmount}</td>
-                                            <td>${loan.status}</td>
-                                            <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
-                                        </tr>
-                                    `);
-                    });
-                },
-                error: function () {
-                    alert('Error fetching loan data.');
-                }
-            });
-        }
+        //function loadLoans(status) {
+        //    const apiUrl = "https://localhost:7000/api/Loan"; // Replace with your API base URL
+        //    $.ajax({
+        //        url: `${apiUrl}/${status}`,
+        //        type: 'GET',
+        //        success: function (data) {
+        //            $('#loanTable tbody').empty();
+        //            data.forEach(loan => {
+        //                $('#loanTable tbody').append(`
+        //                                    <tr>
+        //                                        <td>${loan.loanId}</td>
+        //                                        <td>${loan.customerId}</td>
+        //                                        <td>${loan.loanAmount}</td>
+        //                                        <td>${loan.status}</td>
+        //                                        <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
+        //                                    </tr>
+        //                                `);
+        //            });
+        //        },
+        //        error: function () {
+        //            alert('Error fetching loan data.');
+        //        }
+        //    });
+        //}
 
         function fetchAccountDetails(customerId) {
             $.ajax({
@@ -410,19 +445,19 @@
 
                     response.forEach(account => {
                         const row = `
-                                                        <tr>
-                                                            <td>${account.accountId}</td>
-                                                            <td>${account.accountType}</td>
-                                                            <td>${account.balance}</td>
-                                                            <td>${new Date(account.createdDate).toLocaleDateString()}</td>
-                                                            <td>${account.isActive}</td>
-                                                            <td>
-                                                                <button onclick="updateIsActive(${account.accountId})">${account.isActive ? "Deactivate" : "Activate"}</button>
-                                                            </td>
-                                                            <td>
-                                                                <button onclick="fetchTransactionDetails(${account.accountId})">View Transactions</button>
-                                                            </td>
-                                                        </tr>`;
+                                                            <tr>
+                                                                <td>${account.accountId}</td>
+                                                                <td>${account.accountType}</td>
+                                                                <td>${account.balance}</td>
+                                                                <td>${new Date(account.createdDate).toLocaleDateString()}</td>
+                                                                <td>${account.isActive}</td>
+                                                                <td>
+                                                                    <button onclick="updateIsActive(${account.accountId})">${account.isActive ? "Deactivate" : "Activate"}</button>
+                                                                </td>
+                                                                <td>
+                                                                    <button onclick="fetchTransactionDetails(${account.accountId})">View Transactions</button>
+                                                                </td>
+                                                            </tr>`;
                         tableBody.append(row);
                     });
 
@@ -447,21 +482,21 @@
 
                     response.receivers.forEach(receiver => {
                         const creditedRow = `
-                                    <tr>
-                                        <td>${receiver.receiverTransactionId}</td>
-                                        <td>${receiver.receiverAccountId}</td>
-                                        <td>${receiver.receivedAmount}</td>
-                                    </tr>`;
+                                        <tr>
+                                            <td>${receiver.receiverTransactionId}</td>
+                                            <td>${receiver.receiverAccountId}</td>
+                                            <td>${receiver.receivedAmount}</td>
+                                        </tr>`;
                         creditedTableBody.append(creditedRow);
                     });
 
                     response.transactions.forEach(transaction => {
                         const debitedRow = `
-                                    <tr>
-                                        <td>${transaction.transactionId}</td>
-                                        <td>${transaction.amount}</td>
-                                        <td>${new Date(transaction.transactionDate).toLocaleDateString()}</td>
-                                    </tr>`;
+                                        <tr>
+                                            <td>${transaction.transactionId}</td>
+                                            <td>${transaction.amount}</td>
+                                            <td>${new Date(transaction.transactionDate).toLocaleDateString()}</td>
+                                        </tr>`;
                         debitedTableBody.append(debitedRow);
                     });
 
@@ -542,8 +577,154 @@
                 }
             });
         }
+
+        $(document).ready(function () {
+            // Initially hide loan buttons, close button, and table
+            $("#loanButtons").hide();
+            $("#loanTable").hide();
+            $("#tableTitle").hide();
+            $("#closeLoanApplicationList").hide();
+
+            const apiUrl = "https://localhost:7000/api/Loan"; // Replace with your API base URL
+
+            // Show loan buttons when "Loan Application List" is clicked
+            $("#loadLoanApplicationList").click(function () {
+                $("#loanButtons").fadeIn();
+                $("#tableTitle").text("Loan Application List").fadeIn();
+                $("#closeLoanApplicationList").fadeIn();
+            });
+
+            // Close button functionality
+            $("#closeLoanApplicationList").click(function () {
+                $("#loanButtons").fadeOut();
+                $("#tableTitle").fadeOut();
+                $("#loanTable").fadeOut();
+                $(this).fadeOut(); // Hide the Close button itself
+            });
+
+            // Function to fetch and display loans based on their status
+            function loadLoans(status) {
+                $("#loanTable").hide(); // Hide the table while data is loading
+                const endpoint =
+                    status === "Approved"
+                        ? "/Approved"
+                        : status === "Rejected"
+                            ? "/Rejected"
+                            : "/Pending";
+                const title =
+                    status === "Approved"
+                        ? "Approved Loans"
+                        : status === "Rejected"
+                            ? "Rejected Loans"
+                            : "Pending Loans";
+
+                $.ajax({
+                    url: `${apiUrl}${endpoint}`,
+                    type: "GET",
+                    success: function (data) {
+                        $("#loanTable tbody").empty(); // Clear the table body
+                        $("#tableTitle").text(title); // Update the table title
+                        $("#loanTable").fadeIn(); // Show the table
+
+                        if (data.length === 0) {
+                            $("#loanTable tbody").append(`
+                                        <tr>
+                                            <td colspan="6" style="text-align: center;">No ${title}</td>
+                                        </tr>
+                                    `);
+                        } else {
+                            data.forEach((loan) => {
+                                let actionButtons = "";
+                                if (status === "Pending") {
+                                    actionButtons = `
+                                        <button class="approve-btn" data-loan-id="${loan.loanId}">Approve</button>
+                                        <button class="reject-btn" data-loan-id="${loan.loanId}">Reject</button>`;
+                                }
+
+                                $("#loanTable tbody").append(`
+                                            <tr>
+                                                <td>${loan.loanId}</td>
+                                                <td>${loan.customerId}</td>
+                                                <td>${loan.loanAmount}</td>
+                                                <td>${loan.status}</td>
+                                                <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
+                                                <td class="action-buttons">${actionButtons}</td>
+                                            </tr>
+                                        `);
+                            });
+
+                            // Hide the Actions column for Approved and Rejected loans
+                            if (status !== "Pending") {
+                                $(".action-buttons").hide();
+                            } else {
+                                $(".action-buttons").show();
+                            }
+
+                            // Attach click event handlers to approve/reject buttons for pending loans
+                            if (status === "Pending") {
+                                $(".approve-btn").click(function () {
+                                    const loanId = $(this).data("loan-id");
+                                    approveLoan(loanId);
+                                });
+
+                                $(".reject-btn").click(function () {
+                                    const loanId = $(this).data("loan-id");
+                                    rejectLoan(loanId);
+                                });
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert(`Failed to fetch ${status} loans.`);
+                    },
+                });
+            }
+
+            // Approve loan function
+            function approveLoan(loanId) {
+                $.ajax({
+                    url: `${apiUrl}/Approve/${loanId}`,
+                    type: "PUT",
+                    success: function () {
+                        alert(`Loan ${loanId} approved successfully.`);
+                        loadLoans("Pending"); // Reload pending loans
+                    },
+                    error: function () {
+                        alert(`Failed to approve loan ${loanId}.`);
+                    },
+                });
+            }
+
+            // Reject loan function
+            function rejectLoan(loanId) {
+                $.ajax({
+                    url: `${apiUrl}/Reject/${loanId}`,
+                    type: "PUT",
+                    success: function () {
+                        alert(`Loan ${loanId} rejected successfully.`);
+                        loadLoans("Pending"); // Reload pending loans
+                    },
+                    error: function () {
+                        alert(`Failed to reject loan ${loanId}.`);
+                    },
+                });
+            }
+
+            // Event listeners for loan type buttons
+            $("#showPendingLoans").click(function () {
+                loadLoans("Pending");
+            });
+
+            $("#showApprovedLoans").click(function () {
+                loadLoans("Approved");
+            });
+
+            $("#showRejectedLoans").click(function () {
+                loadLoans("Rejected");
+            });
+        });
+
     </script>
 
 </body>
 </html>
-

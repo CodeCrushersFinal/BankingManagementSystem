@@ -21,6 +21,8 @@ namespace BMSWebApi.Model
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Receiver> Receivers { get; set; }
 
+        public virtual DbSet<AuditLog> AuditLogs { get; set; } 
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=.\\sqlexpress;Initial Catalog=BMSDb;Integrated Security=True;TrustServerCertificate=True");
 

@@ -265,6 +265,7 @@
     <Content Include="Views\Customer\DepositWithdraw.cshtml" />
     <Content Include="Views\Customer\ApplyLoan.cshtml" />
     <Content Include="Views\Customer\Profile.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

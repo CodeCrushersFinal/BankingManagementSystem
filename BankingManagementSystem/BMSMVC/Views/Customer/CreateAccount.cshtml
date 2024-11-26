@@ -205,8 +205,8 @@
                 <label for="username">AccountID <span class="required">*</span></label>
                 <input type="text" id="username" placeholder="Enter your customerID" required>
 
-                <label for="CustomerId">CustomerId <span class="required">*</span></label>
-                <input type="text" id="CustomerId" placeholder="Enter your customerID" required>
+                @*<label for="CustomerId">CustomerId <span class="required">*</span></label>
+                <input type="text" id="CustomerId" placeholder="@ViewBag.Message" required readonly>*@
 
                 <label for="AccountType">AccountType <span class="required">*</span></label>
                 <input type="text" id="AccountType" placeholder="Enter the account type" required>
@@ -233,13 +233,13 @@
         }
 
         // Handle form submission using AJAX
-        function submitForm(event) {
+        @*function submitForm(event) {
             event.preventDefault();  // Prevent the default form submission
 
             // Get the form data
             const formData = {
                 AccountID: document.getElementById('username').value,
-                CustomerId: document.getElementById('CustomerId').value,
+                CustomerId: '@ViewBag.Message',
                 AccountType: document.getElementById('AccountType').value,
                 Balance: document.getElementById('Balance').value
             };
@@ -260,7 +260,37 @@
                     alert("Error creating account. Please try again.");
                 }
             });
+        }*@
+
+        function submitForm(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            // Get the form data
+            const formData = {
+                AccountID: document.getElementById('username').value,
+                CustomerId: '@ViewBag.Message',  // Ensure this renders correctly as a string
+                AccountType: document.getElementById('AccountType').value,
+                Balance: document.getElementById('Balance').value
+            };
+
+            console.log("Form Data: ", formData);
+
+            // Perform the AJAX request
+            $.ajax({
+                url: 'https://localhost:7000/api/Account',  // Your backend API endpoint here
+                method: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',  // Ensure data is sent as JSON
+                success: function (response) {
+                    alert("Account created successfully!");
+                    closeForm();  // Close the modal form
+                },
+                error: function (error) {
+                    alert("Error creating account. Please try again.");
+                }
+            });
         }
+
     </script>
 </body>
 </html>

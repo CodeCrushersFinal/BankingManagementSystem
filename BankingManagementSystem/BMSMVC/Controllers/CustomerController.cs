@@ -39,8 +39,9 @@ namespace BMSMVC.Controllers
             return View();
         }
 
-        public ActionResult CreateAccount()
+        public ActionResult CreateAccount(int id)
         {
+            ViewBag.Message = id;
             return View();
         }
 

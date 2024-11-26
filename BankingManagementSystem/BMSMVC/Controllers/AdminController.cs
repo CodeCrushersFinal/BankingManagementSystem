@@ -14,5 +14,10 @@ namespace BMSMVC.Controllers
             return View();
         }
 
+        public ActionResult Index() 
+        { 
+            return View();
+        }
+
     }
 }

@@ -276,7 +276,7 @@
                     <p>Send money to another account securely and easily.</p>
                 </div>
             </div>
-            <div class="card" onclick="window.location.href='@Url.Action("CreateAccount","Customer")'">
+            <div class="card" onclick="window.location.href='@Url.Action("CreateAccount","Customer", new {id=ViewBag.Message})'">
                 <div class="card-image" style="background-image: url('https://thumbs.dreamstime.com/b/digital-background-banking-online-vector-concept-digital-background-banking-online-vector-concept-eps-119477548.jpg');"></div>
                 <div class="card-content">
                     <h2>Create an Account</h2>

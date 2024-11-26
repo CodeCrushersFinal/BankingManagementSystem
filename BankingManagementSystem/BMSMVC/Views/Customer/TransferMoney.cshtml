@@ -19,42 +19,6 @@
             padding-top: 60px; /* For navbar space */
         }
 
-        /*        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: #192677;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            z-index: 1000;
-        }*/
-
-        /*            .navbar .logo {
-                font-size: 1.5rem;
-                font-weight: bold;
-            }
-
-            .navbar .nav-links {
-                list-style: none;
-                display: flex;
-                gap: 1.5rem;
-            }
-
-                .navbar .nav-links a {
-                    color: white;
-                    text-decoration: none;
-                    padding: 0.5rem 1rem;
-                    border-radius: 5px;
-                    transition: background-color 0.3s;
-                }
-
-                    .navbar .nav-links a:hover {
-                        background-color: #333;
-                    }*/
-
         .content-container {
             display: flex;
             justify-content: space-between;
@@ -135,15 +99,6 @@
     </style>
 </head>
 <body>
-    @*<nav class="navbar">
-            <div class="logo">Vivid Bank</div>
-            <ul class="nav-links">
-                <li><a href="#">Home</a></li>
-                <li><a href="customer.html">Customer</a></li>
-                <li><a href="admin.html">Admin</a></li>
-            </ul>
-        </nav>*@
-
     <main>
         <div class="content-container">
             <div class="text-container">
@@ -216,11 +171,13 @@
                 contentType: "application/json", // Data format
                 data: JSON.stringify(transactionData), // Convert data object to JSON string
                 success: function (data) {
+                    console.log(data);
                     // On success, show alert and close the form
                     alert("Transaction Successful!");
                     closeForm();
                 },
                 error: function (xhr, status, error) {
+                    console.log("Hi");
                     // Handle errors
                     console.error("Error:", error);
                     alert("Transaction Failed. Please try again.");

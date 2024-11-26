@@ -1,0 +1,240 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
+            margin-top:100px;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        button {
+            background-color: #4c68af;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #1e2156;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #loanButtons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #loanTable {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .action-buttons {
+            display: none;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h2 id="tableTitle" style="display: none;">Loan Application List</h2>
+    <div style="text-align: center;">
+        <button id="loadLoanApplicationList">Loan Application List</button>
+        <button id="closeLoanApplicationList" style="display: none;">Close</button>
+    </div>
+    <div id="loanButtons" style="display: none;">
+        <button id="showPendingLoans">Show Pending Loans</button>
+        <button id="showApprovedLoans">Show Approved Loans</button>
+        <button id="showRejectedLoans">Show Rejected Loans</button>
+    </div>
+    <table id="loanTable">
+        <thead>
+            <tr>
+                <th>Loan ID</th>
+                <th>Customer ID</th>
+                <th>Loan Amount</th>
+                <th>Status</th>
+                <th>Application Date</th>
+                <th class="action-buttons">Actions</th> <!-- Actions column, will be hidden for approved/rejected loans -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loan data will be populated here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            // Initially hide loan buttons, close button, and table
+            $("#loanButtons").hide();
+            $("#loanTable").hide();
+            $("#tableTitle").hide();
+            $("#closeLoanApplicationList").hide();
+
+            const apiUrl = "https://localhost:7000/api/Loan"; // Replace with your API base URL
+
+            // Show loan buttons when "Loan Application List" is clicked
+            $("#loadLoanApplicationList").click(function () {
+                $("#loanButtons").fadeIn();
+                $("#tableTitle").text("Loan Application List").fadeIn();
+                $("#closeLoanApplicationList").fadeIn();
+            });
+
+            // Close button functionality
+            $("#closeLoanApplicationList").click(function () {
+                $("#loanButtons").fadeOut();
+                $("#tableTitle").fadeOut();
+                $("#loanTable").fadeOut();
+                $(this).fadeOut(); // Hide the Close button itself
+            });
+
+            // Function to fetch and display loans based on their status
+            function loadLoans(status) {
+                $("#loanTable").hide(); // Hide the table while data is loading
+                const endpoint =
+                    status === "Approved"
+                        ? "/Approved"
+                        : status === "Rejected"
+                            ? "/Rejected"
+                            : "/Pending";
+                const title =
+                    status === "Approved"
+                        ? "Approved Loans"
+                        : status === "Rejected"
+                            ? "Rejected Loans"
+                            : "Pending Loans";
+
+                $.ajax({
+                    url: `${apiUrl}${endpoint}`,
+                    type: "GET",
+                    success: function (data) {
+                        $("#loanTable tbody").empty(); // Clear the table body
+                        $("#tableTitle").text(title); // Update the table title
+                        $("#loanTable").fadeIn(); // Show the table
+
+                        if (data.length === 0) {
+                            $("#loanTable tbody").append(`
+                                                <tr>
+                                                    <td colspan="6" style="text-align: center;">No ${title}</td>
+                                                </tr>
+                                            `);
+                        } else {
+                            data.forEach((loan) => {
+                                let actionButtons = "";
+                                if (status === "Pending") {
+                                    actionButtons = `
+                                                <button class="approve-btn" data-loan-id="${loan.loanId}">Approve</button>
+                                                <button class="reject-btn" data-loan-id="${loan.loanId}">Reject</button>`;
+                                }
+
+                                $("#loanTable tbody").append(`
+                                                    <tr>
+                                                        <td>${loan.loanId}</td>
+                                                        <td>${loan.customerId}</td>
+                                                        <td>${loan.loanAmount}</td>
+                                                        <td>${loan.status}</td>
+                                                        <td>${new Date(loan.applicationDate).toLocaleDateString()}</td>
+                                                        <td class="action-buttons">${actionButtons}</td>
+                                                    </tr>
+                                                `);
+                            });
+
+                            // Hide the Actions column for Approved and Rejected loans
+                            if (status !== "Pending") {
+                                $(".action-buttons").hide();
+                            } else {
+                                $(".action-buttons").show();
+                            }
+
+                            // Attach click event handlers to approve/reject buttons for pending loans
+                            if (status === "Pending") {
+                                $(".approve-btn").click(function () {
+                                    const loanId = $(this).data("loan-id");
+                                    approveLoan(loanId);
+                                });
+
+                                $(".reject-btn").click(function () {
+                                    const loanId = $(this).data("loan-id");
+                                    rejectLoan(loanId);
+                                });
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert(`Failed to fetch ${status} loans.`);
+                    },
+                });
+            }
+
+            // Approve loan function
+            function approveLoan(loanId) {
+                $.ajax({
+                    url: `${apiUrl}/Approve/${loanId}`,
+                    type: "PUT",
+                    success: function () {
+                        alert(`Loan ${loanId} approved successfully.`);
+                        loadLoans("Pending"); // Reload pending loans
+                    },
+                    error: function () {
+                        alert(`Failed to approve loan ${loanId}.`);
+                    },
+                });
+            }
+
+            // Reject loan function
+            function rejectLoan(loanId) {
+                $.ajax({
+                    url: `${apiUrl}/Reject/${loanId}`,
+                    type: "PUT",
+                    success: function () {
+                        alert(`Loan ${loanId} rejected successfully.`);
+                        loadLoans("Pending"); // Reload pending loans
+                    },
+                    error: function () {
+                        alert(`Failed to reject loan ${loanId}.`);
+                    },
+                });
+            }
+
+            // Event listeners for loan type buttons
+            $("#showPendingLoans").click(function () {
+                loadLoans("Pending");
+            });
+
+            $("#showApprovedLoans").click(function () {
+                loadLoans("Approved");
+            });
+
+            $("#showRejectedLoans").click(function () {
+                loadLoans("Rejected");
+            });
+        });
+    </script>
+</body>
+</html>
