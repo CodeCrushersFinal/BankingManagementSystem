@@ -13,7 +13,7 @@
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
-            margin: 0;
+            margin-top: 95px;
             /*padding-top: 60px;*/ /* For navbar space */
         }
 
@@ -27,7 +27,15 @@
             max-width: 100%;
             height: 400px;
         }
-
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 600px;
+            height: auto;
+            margin: 5px;
+            padding: 70px;
+            border-radius: 0px;
+        }
         .big-button {
             background-color: #343fa1;
             color: white;
@@ -101,7 +109,7 @@
     <main>
         <div class="content-container">
             <div class="text-container">
-                <h2>Swift, Secure, Seamless Transfers—Anywhere, Anytime.</h2>
+                <h2 style="font-size: 60px; margin-top: 80px;margin-left: 60px;font-family: Garamond, serif;">Swift, Secure, Seamless Transfers—Anywhere, Anytime.</h2>
             </div>
             <div class="image-container">
                 <img src="https://cdni.iconscout.com/illustration/premium/thumb/transfer-money-via-mobile-app-illustration-download-in-svg-png-gif-file-formats--online-banking-electronic-funds-eft-bank-transaction-pack-business-illustrations-9803923.png?f=webp" alt="Transaction Illustration">
@@ -109,8 +117,10 @@
         </div>
 
         <!-- Deposit and Withdraw Section -->
+        <div class="btn-container ">
         <button class="big-button" onclick="openDepositForm()">DEPOSIT NOW</button>
         <button class="big-button" onclick="openWithdrawForm()">WITHDRAW NOW</button>
+            </div>
     </main>
 
     <!-- Deposit Modal -->
@@ -121,7 +131,9 @@
             <h2>Deposit Funds</h2>
             <form id="depositFormDetails">
                 <label for="AccountIdDeposit">Account ID</label>
-                <input type="text" id="AccountIdDeposit" placeholder="Enter Account ID" required>
+                <select id="AccountIdDeposit" class="loadAccountId" placeholder="Select Account ID" required>
+                    <option value="" disabled selected>Select Account Id</option>
+                </select>
 
                 <label for="AmountDeposit">Amount</label>
                 <input type="number" id="AmountDeposit" placeholder="Enter Amount" required>
@@ -139,7 +151,9 @@
             <h2>Withdraw Funds</h2>
             <form id="withdrawFormDetails">
                 <label for="AccountIdWithdraw">Account ID</label>
-                <input type="text" id="AccountIdWithdraw" placeholder="Enter Account ID" required>
+                <select id="AccountIdWithdraw" class="loadAccountId" placeholder="Select Account ID" required>
+                    <option value="" disabled selected>Select Account Id</option>
+                </select>
 
                 <label for="AmountWithdraw">Amount</label>
                 <input type="number" id="AmountWithdraw" placeholder="Enter Amount" required>
@@ -149,6 +163,7 @@
         </div>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         // Function to open Deposit form
         function openDepositForm() {
@@ -236,6 +251,36 @@
                     console.error('Error:', error);
                     alert('Transaction failed. Please try again later.');
                 });
+        });
+            // Function to load account IDs into the dropdown
+        function loadAccountIds() {
+            // Perform AJAX GET request
+            $.ajax({
+                url: `https://localhost:7000/api/Customer/${@ViewBag.Message}/AccountID`, // API endpoint with CustomerId
+                type: "GET",
+                success: function (data) {
+                    console.log("API Response:", data); // Debugging step to confirm data is correct
+
+                    // Populate the dropdown with fetched account IDs
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(function (accountId) {
+                            $(".loadAccountId").append(`<option value="${accountId}">${accountId}</option>`);
+                        });
+                    } else {
+                        console.error("No account IDs found or invalid response format.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors
+                    console.error("Error:", error);
+                    alert("Failed to load account IDs. Please check the CustomerId or try again.");
+                },
+            });
+        }
+
+        // Trigger the function when the form opens
+        $(document).ready(function () {
+            loadAccountIds(); // Call the function when the document is ready
         });
     </script>
 </body>

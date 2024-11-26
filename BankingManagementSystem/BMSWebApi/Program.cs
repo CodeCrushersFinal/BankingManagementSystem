@@ -12,7 +12,7 @@ namespace BMSWebApi
             //Configure Serilog
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
-                .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+                .WriteTo.File("wwwroot/log.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
 
@@ -53,7 +53,7 @@ namespace BMSWebApi
 
             app.UseAuthorization();
 
-
+            app.UseStaticFiles();
             app.MapControllers();
 
             app.Run();

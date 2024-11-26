@@ -268,7 +268,7 @@
     <h3 style="font-size: 30px;margin-left: 100px;">Customer Banking Options</h3>
     <div class="card-container">
         <div class="cards-container">
-            <div class="card" onclick="window.location.href='@Url.Action("TransferMoney", "Customer")'">
+            <div class="card" onclick="window.location.href='@Url.Action("TransferMoney", "Customer",new {id=ViewBag.Message})'">
 
                 <div class="card-image" style="background-image: url('https://static.vecteezy.com/system/resources/thumbnails/027/742/677/small/internet-banking-technology-concept-vector.jpg');"></div>
                 <div class="card-content">
@@ -283,7 +283,7 @@
                     <p>Open a new savings or checking account with us.</p>
                 </div>
             </div>
-            <div class="card" onclick="window.location.href='@Url.Action("ApplyLoan","Customer")'">
+            <div class="card" onclick="window.location.href='@Url.Action("ApplyLoan","Customer", new {id=ViewBag.Message})'">
                 <div class="card-image" style="background-image: url('https://www.bruningbank.com/sites/default/files/styles/front_page/public/2024-10/banking.jpeg?itok=jotKVvlO');"></div>
                 <div class="card-content">
                     <h2>Apply for Loan</h2>
@@ -291,7 +291,7 @@
                 </div>
             </div>
 
-            <div class="card" onclick="window.location.href='@Url.Action("DepositWithdraw","Customer")'">
+            <div class="card" onclick="window.location.href='@Url.Action("DepositWithdraw","Customer",new {id=ViewBag.Message})'">
                 <div class="card-image" style="background-image: url('https://www.bruningbank.com/sites/default/files/styles/front_page/public/2024-10/banking.jpeg?itok=jotKVvlO');"></div>
                 <div class="card-content">
                     <h2>Deposit & Withdraw</h2>
@@ -299,14 +299,14 @@
                 </div>
             </div>
 
-            <div class="card" onclick="window.location.href='@Url.Action("CheckBalance","Customer")'">
+            <div class="card" onclick="window.location.href='@Url.Action("CheckBalance","Customer",new {id=ViewBag.Message})'">
                 <div class="card-image" style="background-image: url('https://media.istockphoto.com/id/1389355907/vector/online-banking-login-protection-the-concept-of-a-smart-wallet-with-an-application-for.jpg?s=612x612&w=0&k=20&c=1dpaw7sEyi1E_RYabb-iOMwb8SB7W3n3U6xa20LLAsE=');"></div>
                 <div class="card-content">
                     <h2>Check Bank Balance</h2>
                     <p>View your current bank balance anytime.</p>
                 </div>
             </div>
-            <div class="card" onclick="window.location.href='@Url.Action("TransactionHistory","Customer")'">
+            <div class="card" onclick="window.location.href='@Url.Action("TransactionHistory","Customer",new {id=ViewBag.Message})'">
                 <div class="card-image" style="background-image: url('https://static.vecteezy.com/system/resources/thumbnails/048/879/372/small/fintech-financial-technology-online-banking-and-crowdfunding-business-investment-banking-payment-technology-concept-closeup-finger-about-to-press-a-button-with-fintech-icon-illustration-vector.jpg');"></div>
                 <div class="card-content">
                     <h2>Trasaction History</h2>

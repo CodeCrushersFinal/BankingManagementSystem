@@ -40,7 +40,7 @@ namespace BMSMVC.Controllers
             {
                 Session.Add("Role", "Customer");
                 ViewBag.Role = "Customer";
-                return RedirectToAction("Index","Customer");
+                return RedirectToAction("Index","Customer",new {id=userResponse.CustomerId});
             }
             return View();
         }

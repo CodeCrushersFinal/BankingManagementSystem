@@ -15,7 +15,7 @@
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
             margin: 0;
-            padding-top: 60px; /* To avoid content being hidden under the navbar */
+            padding-top: 60px; 
         }
 
         h1 {
@@ -82,9 +82,6 @@
         <label for="loanId">Loan ID:</label>
         <input type="number" id="loanId" name="loanId" required>
 
-        <label for="customerId">Customer ID:</label>
-        <input type="number" id="customerId" name="customerId" required>
-
         <label for="loanAmount">Loan Amount:</label>
         <input type="number" id="loanAmount" name="loanAmount" required>
 
@@ -113,7 +110,7 @@
                 // Collect form data
                 const loanData = {
                     loanId: parseInt($('#loanId').val()),                // User entered Loan ID
-                    customerId: parseInt($('#customerId').val()),        // User entered Customer ID
+                    customerId: @ViewBag.Message,      // User entered Customer ID
                     loanAmount: parseFloat($('#loanAmount').val()),      // User entered Loan Amount
                     interestRate: parseFloat($('#interestRate').val()),  // User entered Interest Rate, defaults to 0.5 if left as is
                     status: "Waiting for approval",                       // Default status

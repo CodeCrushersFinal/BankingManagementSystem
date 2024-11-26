@@ -74,6 +74,51 @@ namespace BMSWebApi.Controllers
             return Ok(accounts);
         }
 
+        [HttpGet("{customerId}/AccountID")]
+        public IActionResult GetAccountIDByCustomerId(int customerId)
+        {
+            // Fetch accounts where CustomerId matches
+            var accounts = _context.Accounts
+                .Where(a => a.CustomerId == customerId)
+                .Select(a => a.AccountId)
+                .ToList();
+
+            if (accounts == null || !accounts.Any())
+            {
+                return NotFound($"No accounts found for Customer ID {customerId}.");
+            }
+
+            return Ok(accounts);
+        }
+
+        [HttpGet("{email}/AccountsByEmail")]
+        public IActionResult GetAccountsByCustomerEmail(string email)
+        {
+            // Fetch accounts where CustomerId matches
+            var customers = _context.Customers;
+            int customerId=0;
+            foreach (var customer in customers) 
+            { 
+                if(customer.Email == email)
+                {
+                    customerId = customer.CustomerId;
+                }
+            }
+            if (customerId != 0)
+            {
+                var accounts = _context.Accounts
+                .Where(a => a.CustomerId == customerId)
+                .Select(a => a.AccountId )
+                .ToList();
+                return Ok(accounts);
+            }
+
+           else
+            {
+                return NotFound($"No accounts found for this email {email}");
+            }
+        }
+
         /// <summary>
         /// This action helps us to edit the customer details
         /// </summary>
@@ -170,6 +215,28 @@ namespace BMSWebApi.Controllers
         public async Task<ActionResult<Customer>> GetCustomerByEmail(string email)
         {
             return Ok(await _context.Customers.FirstAsync(customers => customers.Email.Equals(email)));
+        }
+
+        [HttpGet("GetID/{email}")]
+        public async Task<ActionResult> GetCustomerIDByEmail(string email)
+        {
+            int id = 0;
+            var customers = _context.Customers;
+            foreach (var customer in customers) 
+            {
+                if (customer.Email.Equals(email))
+                {
+                    id = customer.CustomerId;
+                }
+            }
+            if(id != 0)
+            {
+                return Ok(id);
+            }
+            else
+            {
+                return BadRequest("Customer does not exists");
+            }
         }
 
 

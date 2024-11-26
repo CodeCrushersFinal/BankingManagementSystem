@@ -8,7 +8,9 @@
 <ul class="navbar-nav navbar-right menucontainer">
     @if (User.IsInRole("Customer"))
     {
-        @Html.ActionLink("Profile", "Profile", "Customer", routeValues: null, htmlAttributes: new { id = "profile", @class = "nav-link nav-links a" })
+        <li class="nav-links a">
+            @Html.ActionLink("View Profile", "Profile", "Customer", new { id = ViewBag.Message }, null)
+            </li>
     }
 
     <li class=" nav-links a"><a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>

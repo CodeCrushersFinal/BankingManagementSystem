@@ -165,7 +165,9 @@
                 <input type="text" id="TransactionId" placeholder="Enter Transaction ID" required>
 
                 <label for="SenderAccountId">Sender Account ID</label>
-                <input type="text" id="SenderAccountId" placeholder="Enter Sender Account ID" required>
+                <select id="loadAccountId" name="SenderAccountId" required>
+                    <option value="" disabled selected>Select Account ID</option>
+                </select>
 
                 <label for="ReceiverAccountId">Receiver Account ID</label>
                 <input type="text" id="ReceiverAccountId" placeholder="Enter Receiver Account ID" required>
@@ -174,13 +176,16 @@
                 <input type="number" id="Amount" placeholder="Enter Amount to Transfer" required>
 
                 <label for="TransactionType">Transaction Type</label>
-                <input type="text" id="TransactionType" placeholder="Enter Transaction Type" required>
-
+                <select id="TransactionType" placeholder="Select Transaction Type" required>
+                    <option>UPI</option>
+                    <option>Net Banking</option>
+                </select>
                 <button type="submit">Transfer</button>
             </form>
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function openForm() {
             document.getElementById("createAccountForm").style.display = "flex";
@@ -190,34 +195,78 @@
             document.getElementById("createAccountForm").style.display = "none";
         }
 
-        document.getElementById("transactionForm").addEventListener("submit", function (event) {
-            event.preventDefault();
+        // Attach a submit event handler using jQuery
+        $("#transactionForm").on("submit", function (event) {
+            event.preventDefault(); // Prevent the default form submission
 
+            // Gather transaction data
             const transactionData = {
-                TransactionId: parseInt(document.getElementById("TransactionId").value),
-                SenderAccountId: parseInt(document.getElementById("SenderAccountId").value),
-                RecieverAccountId: parseInt(document.getElementById("ReceiverAccountId").value),
-                Amount: parseFloat(document.getElementById("Amount").value),
-                TransactionType: document.getElementById("TransactionType").value,
-                TransactionDate: new Date().toISOString(),
+                TransactionId: parseInt($("#TransactionId").val()), // Get and parse input value
+                SenderAccountId: parseInt($("#loadAccountId").val()),
+                RecieverAccountId: parseInt($("#ReceiverAccountId").val()),
+                Amount: parseFloat($("#Amount").val()),
+                TransactionType: $("#TransactionType").val(),
+                TransactionDate: new Date().toISOString(), // Generate current date in ISO format
             };
 
-            fetch("https://localhost:7000/api/Transaction", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(transactionData),
-            })
-                .then(response => response.json())
-                .then(data => {
+            // Perform AJAX POST request
+            $.ajax({
+                url: "https://localhost:7000/api/Transaction", // API endpoint
+                type: "POST", // HTTP method
+                contentType: "application/json", // Data format
+                data: JSON.stringify(transactionData), // Convert data object to JSON string
+                success: function (data) {
+                    // On success, show alert and close the form
                     alert("Transaction Successful!");
                     closeForm();
-                })
-                .catch(error => {
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors
                     console.error("Error:", error);
                     alert("Transaction Failed. Please try again.");
-                });
+                },
+            });
         });
+
+        // Function to load account IDs into the dropdown
+        function loadAccountIds() {
+            // Perform AJAX GET request
+            $.ajax({
+                url: `https://localhost:7000/api/Customer/${@ViewBag.Message}/AccountID`, // API endpoint with CustomerId
+                type: "GET",
+                success: function (data) {
+                    console.log("API Response:", data); // Debugging step to confirm data is correct
+
+                    // Clear any existing options in the dropdown
+                    $("#loadAccountId").empty();
+
+                    // Add a default placeholder option
+                    $("#loadAccountId").append('<option value="" disabled selected>Select Account ID</option>');
+
+                    // Populate the dropdown with fetched account IDs
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(function (accountId) {
+                            $("#loadAccountId").append(`<option value="${accountId}">${accountId}</option>`);
+                        });
+                    } else {
+                        console.error("No account IDs found or invalid response format.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors
+                    console.error("Error:", error);
+                    alert("Failed to load account IDs. Please check the CustomerId or try again.");
+                },
+            });
+        }
+
+    // Trigger the function when the form opens
+    $(document).ready(function () {
+        loadAccountIds(); // Call the function when the document is ready
+    });
+
     </script>
+
 </body>
 </html>
 

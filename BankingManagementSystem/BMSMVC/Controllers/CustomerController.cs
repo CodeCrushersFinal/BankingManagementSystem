@@ -9,27 +9,33 @@ namespace BMSMVC.Controllers
     public class CustomerController : Controller
     {
         // GET: Customer
-        public ActionResult Index()
+        public ActionResult Index(int id)
         {
-            return View();
+            ViewBag.Message = id;
+            return View(id);
+
         }
-        public ActionResult TransferMoney()
+        public ActionResult TransferMoney(int id)
         {
-            return View();
+            ViewBag.Message = id;
+            return View(id);
         }
 
-        public ActionResult TransactionHistory()
+        public ActionResult TransactionHistory(int id)
         {
-            return View();
+            ViewBag.Message = id;
+            return View(id);
         }
 
-        public ActionResult CheckBalance()
+        public ActionResult CheckBalance(int id)
         {
-            return View();
+            ViewBag.Message = id;
+            return View(id);
         }
 
-        public ActionResult ApplyLoan()
+        public ActionResult ApplyLoan(int id)
         {
+            ViewBag.Message = id;
             return View();
         }
 
@@ -38,14 +44,16 @@ namespace BMSMVC.Controllers
             return View();
         }
 
-        public ActionResult DepositWithdraw()
+        public ActionResult DepositWithdraw(int id)
         {
-            return View();
+            ViewBag.Message = id;
+            return View(id);
         }
 
-        public ActionResult Profile()
+        public ActionResult Profile(int id)
         {
-            return View();
+            ViewBag.Message = id;
+            return View(id);
         }
     }
 }

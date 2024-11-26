@@ -17,14 +17,11 @@
             background: linear-gradient(135deg, #9bbdf1, #98cbe0, #bfbdfb);
         }
 
-
-
         h1 {
             text-align: center;
             color: #333;
-            margin-top:95px;
+            margin-top: 95px;
         }
-
 
         .profile-info {
             flex: 1;
@@ -52,28 +49,35 @@
         <p><span>Address:</span> <span id="address"></span></p>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Fetch customer details dynamically
-        //const customerId = 1; // Replace with dynamic ID based on logged-in customer
+        // Fetch customer details dynamically using AJAX
+        const customerId = @ViewBag.Message; // Replace with dynamic ID based on logged-in customer
         const apiUrl = `https://localhost:7000/api/Customer/${customerId}`;
 
-        async function fetchCustomerData() {
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error('Customer not found');
-
-                const customer = await response.json();
-                document.getElementById('firstName').textContent = customer.firstName;
-                document.getElementById('lastName').textContent = customer.lastName;
-                document.getElementById('email').textContent = customer.email;
-                document.getElementById('phoneNumber').textContent = customer.phoneNumber;
-                document.getElementById('address').textContent = customer.address;
-            } catch (error) {
-                console.error('Error fetching customer data:', error);
-            }
+        function fetchCustomerData() {
+            $.ajax({
+                url: apiUrl, // API endpoint for fetching customer details
+                type: 'GET',
+                success: function (customer) {
+                    // Populate the UI with the fetched customer data
+                    $('#firstName').text(customer.firstName);
+                    $('#lastName').text(customer.lastName);
+                    $('#email').text(customer.email);
+                    $('#phoneNumber').text(customer.phoneNumber);
+                    $('#address').text(customer.address);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching customer data:', error);
+                    alert('Failed to fetch customer details. Please try again later.');
+                }
+            });
         }
 
-        fetchCustomerData();
+        $(document).ready(function () {
+            fetchCustomerData(); // Call the function when the document is ready
+        });
+
     </script>
 </body>
 </html>
